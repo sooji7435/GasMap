@@ -6,7 +6,7 @@ class OpinetService {
     // TODO: 오피넷 API 키를 여기에 입력하세요
     // 발급: https://www.opinet.co.kr/user/main/mainView.do → 로그인 → 오피넷API → 개인API키발급
     private let apiKey: String = {
-        guard let key = Bundle.main.infoDictionary?["OpinetAPIKey"] as? String,
+        guard let key = Bundle.main.infoDictionary?["APIKey"] as? String,
               !key.isEmpty else {
             fatalError("⚠️ OpinetAPIKey가 Info.plist에 없습니다. Secrets.xcconfig를 확인하세요.")
         }
