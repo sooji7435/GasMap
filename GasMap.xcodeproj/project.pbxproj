@@ -24,38 +24,38 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F83CF7D42F920A600043739A /* OilMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OilMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F83CF7E12F920A610043739A /* OilMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OilMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F83CF7EB2F920A610043739A /* OilMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = OilMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F83CF7D42F920A600043739A /* GasMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GasMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F83CF7E12F920A610043739A /* GasMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GasMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F83CF7EB2F920A610043739A /* GasMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GasMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F83CF8882F9216450043739A /* Exceptions for "OilMap" folder in "OilMap" target */ = {
+		F83CF8882F9216450043739A /* Exceptions for "GasMap" folder in "GasMap" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = F83CF7D32F920A600043739A /* OilMap */;
+			target = F83CF7D32F920A600043739A /* GasMap */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		F83CF7D62F920A600043739A /* OilMap */ = {
+		F83CF7D62F920A600043739A /* GasMap */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				F83CF8882F9216450043739A /* Exceptions for "OilMap" folder in "OilMap" target */,
+				F83CF8882F9216450043739A /* Exceptions for "GasMap" folder in "GasMap" target */,
 			);
-			path = OilMap;
+			path = GasMap;
 			sourceTree = "<group>";
 		};
-		F83CF7E42F920A610043739A /* OilMapTests */ = {
+		F83CF7E42F920A610043739A /* GasMapTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = OilMapTests;
+			path = GasMapTests;
 			sourceTree = "<group>";
 		};
-		F83CF7EE2F920A610043739A /* OilMapUITests */ = {
+		F83CF7EE2F920A610043739A /* GasMapUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = OilMapUITests;
+			path = GasMapUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -88,9 +88,9 @@
 		F83CF7CB2F920A600043739A = {
 			isa = PBXGroup;
 			children = (
-				F83CF7D62F920A600043739A /* OilMap */,
-				F83CF7E42F920A610043739A /* OilMapTests */,
-				F83CF7EE2F920A610043739A /* OilMapUITests */,
+				F83CF7D62F920A600043739A /* GasMap */,
+				F83CF7E42F920A610043739A /* GasMapTests */,
+				F83CF7EE2F920A610043739A /* GasMapUITests */,
 				F83CF7D52F920A600043739A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -98,9 +98,9 @@
 		F83CF7D52F920A600043739A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F83CF7D42F920A600043739A /* OilMap.app */,
-				F83CF7E12F920A610043739A /* OilMapTests.xctest */,
-				F83CF7EB2F920A610043739A /* OilMapUITests.xctest */,
+				F83CF7D42F920A600043739A /* GasMap.app */,
+				F83CF7E12F920A610043739A /* GasMapTests.xctest */,
+				F83CF7EB2F920A610043739A /* GasMapUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -108,9 +108,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F83CF7D32F920A600043739A /* OilMap */ = {
+		F83CF7D32F920A600043739A /* GasMap */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F83CF7F52F920A610043739A /* Build configuration list for PBXNativeTarget "OilMap" */;
+			buildConfigurationList = F83CF7F52F920A610043739A /* Build configuration list for PBXNativeTarget "GasMap" */;
 			buildPhases = (
 				F83CF7D02F920A600043739A /* Sources */,
 				F83CF7D12F920A600043739A /* Frameworks */,
@@ -121,18 +121,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				F83CF7D62F920A600043739A /* OilMap */,
+				F83CF7D62F920A600043739A /* GasMap */,
 			);
-			name = OilMap;
+			name = GasMap;
 			packageProductDependencies = (
 			);
 			productName = OilMap;
-			productReference = F83CF7D42F920A600043739A /* OilMap.app */;
+			productReference = F83CF7D42F920A600043739A /* GasMap.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F83CF7E02F920A610043739A /* OilMapTests */ = {
+		F83CF7E02F920A610043739A /* GasMapTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F83CF7F82F920A610043739A /* Build configuration list for PBXNativeTarget "OilMapTests" */;
+			buildConfigurationList = F83CF7F82F920A610043739A /* Build configuration list for PBXNativeTarget "GasMapTests" */;
 			buildPhases = (
 				F83CF7DD2F920A610043739A /* Sources */,
 				F83CF7DE2F920A610043739A /* Frameworks */,
@@ -144,18 +144,18 @@
 				F83CF7E32F920A610043739A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				F83CF7E42F920A610043739A /* OilMapTests */,
+				F83CF7E42F920A610043739A /* GasMapTests */,
 			);
-			name = OilMapTests;
+			name = GasMapTests;
 			packageProductDependencies = (
 			);
 			productName = OilMapTests;
-			productReference = F83CF7E12F920A610043739A /* OilMapTests.xctest */;
+			productReference = F83CF7E12F920A610043739A /* GasMapTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		F83CF7EA2F920A610043739A /* OilMapUITests */ = {
+		F83CF7EA2F920A610043739A /* GasMapUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F83CF7FB2F920A610043739A /* Build configuration list for PBXNativeTarget "OilMapUITests" */;
+			buildConfigurationList = F83CF7FB2F920A610043739A /* Build configuration list for PBXNativeTarget "GasMapUITests" */;
 			buildPhases = (
 				F83CF7E72F920A610043739A /* Sources */,
 				F83CF7E82F920A610043739A /* Frameworks */,
@@ -167,13 +167,13 @@
 				F83CF7ED2F920A610043739A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				F83CF7EE2F920A610043739A /* OilMapUITests */,
+				F83CF7EE2F920A610043739A /* GasMapUITests */,
 			);
-			name = OilMapUITests;
+			name = GasMapUITests;
 			packageProductDependencies = (
 			);
 			productName = OilMapUITests;
-			productReference = F83CF7EB2F920A610043739A /* OilMapUITests.xctest */;
+			productReference = F83CF7EB2F920A610043739A /* GasMapUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -199,7 +199,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F83CF7CF2F920A600043739A /* Build configuration list for PBXProject "OilMap" */;
+			buildConfigurationList = F83CF7CF2F920A600043739A /* Build configuration list for PBXProject "GasMap" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -213,9 +213,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F83CF7D32F920A600043739A /* OilMap */,
-				F83CF7E02F920A610043739A /* OilMapTests */,
-				F83CF7EA2F920A610043739A /* OilMapUITests */,
+				F83CF7D32F920A600043739A /* GasMap */,
+				F83CF7E02F920A610043739A /* GasMapTests */,
+				F83CF7EA2F920A610043739A /* GasMapUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -271,12 +271,12 @@
 /* Begin PBXTargetDependency section */
 		F83CF7E32F920A610043739A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F83CF7D32F920A600043739A /* OilMap */;
+			target = F83CF7D32F920A600043739A /* GasMap */;
 			targetProxy = F83CF7E22F920A610043739A /* PBXContainerItemProxy */;
 		};
 		F83CF7ED2F920A610043739A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F83CF7D32F920A600043739A /* OilMap */;
+			target = F83CF7D32F920A600043739A /* GasMap */;
 			targetProxy = F83CF7EC2F920A610043739A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -284,7 +284,7 @@
 /* Begin XCBuildConfiguration section */
 		F83CF7F32F920A610043739A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = F83CF7D62F920A600043739A /* OilMap */;
+			baseConfigurationReferenceAnchor = F83CF7D62F920A600043739A /* GasMap */;
 			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -350,7 +350,7 @@
 		};
 		F83CF7F42F920A610043739A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = F83CF7D62F920A600043739A /* OilMap */;
+			baseConfigurationReferenceAnchor = F83CF7D62F920A600043739A /* GasMap */;
 			baseConfigurationReferenceRelativePath = Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -418,7 +418,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OilMap/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "OIlMap을 사용하면 위치 권한을 허용해야합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GasMap을 사용하면 위치 권한을 허용해야합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -429,7 +429,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.younsu.park.OilMap;
+				PRODUCT_BUNDLE_IDENTIFIER = me.younsu.park.GasMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -452,7 +452,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = OilMap/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "OIlMap을 사용하면 위치 권한을 허용해야합니다.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GasMap을 사용하면 위치 권한을 허용해야합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -463,7 +463,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = me.younsu.park.OilMap;
+				PRODUCT_BUNDLE_IDENTIFIER = me.younsu.park.GasMap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -493,7 +493,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OilMap.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OilMap";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GasMap.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GasMap";
 			};
 			name = Debug;
 		};
@@ -515,7 +515,7 @@
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/OilMap.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/OilMap";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GasMap.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GasMap";
 			};
 			name = Release;
 		};
@@ -562,7 +562,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F83CF7CF2F920A600043739A /* Build configuration list for PBXProject "OilMap" */ = {
+		F83CF7CF2F920A600043739A /* Build configuration list for PBXProject "GasMap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F83CF7F32F920A610043739A /* Debug */,
@@ -571,7 +571,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F83CF7F52F920A610043739A /* Build configuration list for PBXNativeTarget "OilMap" */ = {
+		F83CF7F52F920A610043739A /* Build configuration list for PBXNativeTarget "GasMap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F83CF7F62F920A610043739A /* Debug */,
@@ -580,7 +580,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F83CF7F82F920A610043739A /* Build configuration list for PBXNativeTarget "OilMapTests" */ = {
+		F83CF7F82F920A610043739A /* Build configuration list for PBXNativeTarget "GasMapTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F83CF7F92F920A610043739A /* Debug */,
@@ -589,7 +589,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F83CF7FB2F920A610043739A /* Build configuration list for PBXNativeTarget "OilMapUITests" */ = {
+		F83CF7FB2F920A610043739A /* Build configuration list for PBXNativeTarget "GasMapUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F83CF7FC2F920A610043739A /* Debug */,
