@@ -58,6 +58,8 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         
+        formatter.maximumFractionDigits = 0
+        
         return (formatter.string(from: NSNumber(value: avg)) ?? "\(avg)") + "원"
     }
     
