@@ -19,6 +19,12 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @AppStorage("priceOffset") private var priceOffset: Int = 30
 
     enum Tab { case map, ranking }
+    
+    private enum RadiusConfig {
+        static let multiplier: Double = 100
+        static let minimum: Int = 2
+        static let maximum: Int = 50
+    }
 
     private let apiService = OpinetService()
     private let completer = MKLocalSearchCompleter()
@@ -41,14 +47,17 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     var cheapestPrice: String {
         guard let min = stations.min(by: { $0.price < $1.price }) else { return "-" }
+        
         return min.formattedPrice
     }
 
     var averagePrice: String {
         guard !stations.isEmpty else { return "-" }
-        let avg = stations.map(\.price).reduce(0, +) / stations.count
+        let total = stations.map(\.price).reduce(0, +)
+        let avg = Double(total) / Double(stations.count)
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
+        
         return (formatter.string(from: NSNumber(value: avg)) ?? "\(avg)") + "원"
     }
     
@@ -66,6 +75,9 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         errorMessage = nil
         
         Task {
+            [weak self] in
+            guard let self else { return }
+            
             defer { isLoading = false }
 
             do {
@@ -112,10 +124,8 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
     
     private func calculateRadius(from span: Double) -> Int {
-        // Span 0.01은 대략 1km 정도
-        // 최소 2km ~ 최대 20km 사이로 반경을 조절
-        let calculated = Int(span * 100)
-        return min(max(calculated, 2), 50)
+        let calculated = Int(span * RadiusConfig.multiplier)
+        return min(max(calculated, RadiusConfig.minimum), RadiusConfig.maximum)
     }
     
     // 타이핑할 때마다 호출
@@ -170,37 +180,11 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 
     func moveToStation(_ station: StationSearchResult, handler: @escaping (MKCoordinateRegion?) -> Void) {
-        let wgs = convertKATECToWGS84(x: station.katecX, y: station.katecY)
+        let coordinate = CoordinateConverter.katecToWGS84(x: station.katecX, y: station.katecY)
         let region = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: wgs.lat, longitude: wgs.lon),
+            center: CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude),
             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         )
         handler(region)
     }
-    
-    private func convertKATECToWGS84(x: Double, y: Double) -> (lat: Double, lon: Double) {
-        let d2r = Double.pi / 180.0
-        let r2d = 180.0 / Double.pi
-        let k0 = 0.9996
-        let a = 6378137.0
-        let f = 1 / 298.257223563
-        let b = a * (1 - f)
-        let e2 = (a*a - b*b) / (a*a)
-        let x0 = 400000.0; let y0 = 600000.0
-        let lon0 = 128.0 * d2r; let lat0 = 38.0 * d2r
-        let e1 = (1 - sqrt(1 - e2)) / (1 + sqrt(1 - e2))
-        let m0 = a * ((1 - e2/4 - 3*e2*e2/64) * lat0 - (3*e2/8 + 3*e2*e2/32) * sin(2*lat0) + (15*e2*e2/256) * sin(4*lat0))
-        let m = m0 + (y - y0) / k0
-        let mu = m / (a * (1 - e2/4 - 3*e2*e2/64))
-        let phi1 = mu + (3*e1/2 - 27*pow(e1,3)/32) * sin(2*mu) + (21*e1*e1/16) * sin(4*mu)
-        let n1 = a / sqrt(1 - e2 * sin(phi1) * sin(phi1))
-        let t1 = tan(phi1) * tan(phi1)
-        let c1 = e2 / (1 - e2) * cos(phi1) * cos(phi1)
-        let r1 = a * (1 - e2) / pow(1 - e2 * sin(phi1) * sin(phi1), 1.5)
-        let d = (x - x0) / (n1 * k0)
-        let lat = phi1 - (n1 * tan(phi1) / r1) * (d*d/2 - (5 + 3*t1 + 10*c1 - 4*c1*c1) * pow(d,4)/24)
-        let lon = lon0 + (d - (1 + 2*t1 + c1) * pow(d,3)/6) / cos(phi1)
-        return (lat * r2d, lon * r2d)
-    }
-    
 }
