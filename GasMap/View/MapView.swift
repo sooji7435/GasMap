@@ -13,7 +13,7 @@ struct MapView: View {
     @AppStorage("priceOffset") private var priceOffset: Int = 30
     
     var body: some View {
-            Map(position: $cameraPosition) {
+        Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
                 ForEach(viewModel.stations) { station in
                         Annotation(station.name, coordinate: station.coordinate) {
                             PriceAnnotationView(

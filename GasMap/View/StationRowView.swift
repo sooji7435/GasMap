@@ -86,7 +86,7 @@ struct RankingRowView: View {
 
             Text(station.formattedPrice)
                 .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(rank == 1 ? .green : (rank <= 3 ? .orange : .primary))
+                .foregroundColor(rank == 1 ? .green : (rank == 2 ? .orange : (rank == 3 ? .yellow : .primary)))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)

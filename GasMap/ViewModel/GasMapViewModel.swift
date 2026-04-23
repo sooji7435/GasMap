@@ -22,7 +22,12 @@ class GasMapViewModel: ObservableObject, Observable {
     private var cancellables = Set<AnyCancellable>()
 
     var sortedByPrice: [GasStation] {
-        stations.sorted { $0.price < $1.price }
+        stations.sorted {
+            if $0.price == $1.price {
+                return $0.distance < $1.distance  // 가격 같으면 거리 가까운 순
+            }
+            return $0.price < $1.price
+        }
     }
 
     var cheapestPrice: String {
