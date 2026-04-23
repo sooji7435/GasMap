@@ -9,37 +9,33 @@ struct MapView: View {
     @State private var cameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
     @State private var currentSpan: Double = 0.02
     @State private var showSheet: Bool = true
+    @State private var searchText = ""
     
     @AppStorage("priceOffset") private var priceOffset: Int = 30
     
     var body: some View {
-        Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
+        ZStack {
+            Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
                 ForEach(viewModel.stations) { station in
-                        Annotation(station.name, coordinate: station.coordinate) {
-                            PriceAnnotationView(
-                                viewModel: viewModel,
-                                station: station,
-                                isSelected: viewModel.selectedStation?.id == station.id
-                            )
-                            // 줌이 멀어질수록 크기를 더 작게 조절 (0.5배까지)
-                            .scaleEffect(viewModel.calculateScale(span: currentSpan))
-                            .animation(.easeOut(duration: 0.2), value: currentSpan)
-                            .onTapGesture {
-                                viewModel.selectStation(station)
-                            }
+                    Annotation(station.name, coordinate: station.coordinate) {
+                        PriceAnnotationView(
+                            viewModel: viewModel,
+                            station: station,
+                            isSelected: viewModel.selectedStation?.id == station.id
+                        )
+                        // 줌이 멀어질수록 크기를 더 작게 조절 (0.5배까지)
+                        .scaleEffect(viewModel.calculateScale(span: currentSpan))
+                        .animation(.easeOut(duration: 0.2), value: currentSpan)
+                        .onTapGesture {
+                            viewModel.selectStation(station)
+                        }
                         
                     }
                 }
                 // 유저 위치 표시 (필요시 전용 마커 추가 가능, 기본은 파란 점)
                 UserAnnotation()
             }
-            //.frame(width: .infinity, height: 600)
-            // 4. 지도 컨트롤 버튼 추가 (내 위치 버튼 등)
-            .mapControls {
-                MapUserLocationButton()
-                MapCompass()
-            }
-            // 5. 유저 위치가 처음 잡혔을 때 로직 처리 (선택 사항)
+            // 유저 위치가 처음 잡혔을 때 로직 처리
             .onAppear {
                 locationManager.requestLocationPermission()
                 locationManager.startUpdating()
@@ -63,8 +59,40 @@ struct MapView: View {
                 //sheet 제거 방지
                     .interactiveDismissDisabled(true)
             }
+            VStack {
+                SearchBarView(cameraPosition: $cameraPosition)
+                    .environmentObject(viewModel)
+                    .padding(.top)
+                    .padding(.horizontal, 16)
+                
+                Spacer()
+            }
+            
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        cameraPosition = .userLocation(fallback: .automatic)
+                    } label: {
+                        Image(systemName: "location.fill")
+                            .foregroundColor(.blue)
+                            .padding(12)
+                            .background(.ultraThinMaterial)
+                            .clipShape(Circle())
+                            .shadow(color: .black.opacity(0.15), radius: 4)
+                    }
+                }
+                .padding(.trailing, 16)
+                .padding(.bottom, 200) // sheet 위로 올라오도록
+            }
+        }
+        .mapControls {
+            MapCompass() // 나침반만 유지
         }
     }
+}
+
 
 
 // MARK: - Price Annotation
@@ -74,7 +102,7 @@ struct PriceAnnotationView: View {
     
     let station: GasStation
     let isSelected: Bool
-
+    
     var body: some View {
         VStack(spacing: 0) {
             Text(station.formattedPrice)
@@ -91,9 +119,9 @@ struct PriceAnnotationView: View {
     }
     
     private var currentLevel: PriceLevel {
-            station.calculatePriceLevel(average: viewModel.averagePriceValue, offset: priceOffset)
-        }
-
+        station.calculatePriceLevel(average: viewModel.averagePriceValue, offset: priceOffset)
+    }
+    
     private var priceColor: Color {
         switch currentLevel {
         case .cheap:     return Color("PriceCheap")

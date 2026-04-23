@@ -108,47 +108,27 @@ class OpinetService {
         let decoded = try JSONDecoder().decode(OpinetResponse.self, from: data)
         return decoded.result.stations
     }
-}
-
-// MARK: - Mock Data (API 키 없을 때 테스트용)
-
-extension OpinetService {
-    func mockStations(coordinate: CLLocationCoordinate2D, fuelType: FuelType) -> [GasStation] {
-        let offsets: [(Double, Double, String, String, Int, String)] = [
-            (0.003, 0.002,  "GSC", "GS칼텍스 역삼점",      1632, "02-555-1234"),
-            (-0.002, 0.004, "SKE", "SK에너지 강남점",      1698, "02-555-2345"),
-            (0.005, -0.003, "SOL", "S-OIL 논현점",         1619, "02-555-3456"),
-            (-0.004, -0.002,"HDO", "현대오일뱅크 대치점",   1741, "02-555-4567"),
-            (0.001, 0.006,  "RTO", "알뜰주유소 선릉",      1671, "02-555-5678"),
-            (-0.006, 0.001, "GSC", "GS칼텍스 삼성점",      1655, "02-555-6789"),
-            (0.007, 0.003,  "SKE", "SK에너지 도곡점",      1688, "02-555-7890"),
-            (-0.003, -0.005,"SOL", "S-OIL 개포점",        1645, "02-555-8901"),
-        ]
-
-        return offsets.enumerated().map { index, offset in
-            let lat = coordinate.latitude + offset.0
-            let lon = coordinate.longitude + offset.1
-            
-            // CLLocation의 distance는 미터(m) 단위로 나옵니다.
-            // 모델의 distance 타입(Double)에 맞춰 그대로 사용합니다.
-            let dist = CLLocation(latitude: lat, longitude: lon)
-                .distance(from: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
-
-            return GasStation(
-                id: "ST\(index + 1)",
-                name: offset.3,
-                brand: offset.2,
-                price: offset.4,
-                distance: dist,
-                address: "서울시 강남구 테헤란로 \((index + 1) * 10)",
-                tel: offset.5,
-                // 모델에 정의된 KATEC 좌표 필드에 임시 값 할당
-                katecX: 310000.0 + Double(index * 100),
-                katecY: 540000.0 + Double(index * 100)
-            )
-        }.sorted { $0.distance < $1.distance }
+    
+    // MARK: - 주유소명 검색
+    func searchStationsByName(name: String) async throws -> [StationSearchResult] {
+        let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? name
+        let urlString = "\(baseURL)/searchByName.do" +
+            "?code=\(apiKey)" +
+            "&out=json" +
+            "&osnm=\(encodedName)"
+        
+        guard let url = URL(string: urlString) else { throw APIError.invalidURL }
+        
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else { throw APIError.serverError }
+        
+        let decoded = try JSONDecoder().decode(StationSearchResponse.self, from: data)
+        return decoded.result.stations
     }
 }
+
+
 
 // MARK: - Errors
 enum APIError: LocalizedError {
