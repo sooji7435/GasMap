@@ -41,10 +41,9 @@ struct MapView: View {
                 locationManager.startUpdating()
                 
             }
-            .onChange(of: locationManager.userLocation) { _, location in
-                guard let location else { return }
+            .onChange(of: locationManager.currentCoordinate.latitude) { _, _ in
+                guard let location = locationManager.userLocation else { return }
                 
-                // 최초 1회만 실행
                 if viewModel.stations.isEmpty {
                     let region = MKCoordinateRegion(
                         center: location.coordinate,
