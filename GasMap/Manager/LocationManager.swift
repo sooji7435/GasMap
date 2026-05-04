@@ -13,6 +13,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var currentCoordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780)
     @Published var userLocation: CLLocation?
     
+    private var isFirstLocation = true
     
     private let manager = CLLocationManager()
     
@@ -44,10 +45,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
         
-        let coordinate = location.coordinate
-        
         DispatchQueue.main.async {
-            self.currentCoordinate = CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            self.currentCoordinate = location.coordinate
             self.userLocation = location
         }
     }

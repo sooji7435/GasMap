@@ -32,7 +32,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     
     override init() {
         super.init()
-                completer.delegate = self  // ✅ 추가
+                completer.delegate = self
                 completer.resultTypes = .address
     }
 

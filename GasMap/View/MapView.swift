@@ -19,9 +19,9 @@ struct MapView: View {
                 ForEach(viewModel.stations) { station in
                     Annotation(station.name, coordinate: station.coordinate) {
                         PriceAnnotationView(
-                            viewModel: viewModel,
                             station: station,
-                            isSelected: viewModel.selectedStation?.id == station.id
+                            isSelected: viewModel.selectedStation?.id == station.id,
+                            averagePrice: viewModel.averagePriceValue  // 추가
                         )
                         // 줌이 멀어질수록 크기를 더 작게 조절 (0.5배까지)
                         .scaleEffect(viewModel.calculateScale(span: currentSpan))
@@ -39,13 +39,25 @@ struct MapView: View {
             .onAppear {
                 locationManager.requestLocationPermission()
                 locationManager.startUpdating()
+                
             }
-            .onMapCameraChange(frequency: .continuous) { context in
-                // 현재 줌 레벨 업데이트 (애니메이션용)
-                currentSpan = context.region.span.latitudeDelta
+            .onChange(of: locationManager.userLocation) { _, location in
+                guard let location else { return }
+                
+                // 최초 1회만 실행
+                if viewModel.stations.isEmpty {
+                    let region = MKCoordinateRegion(
+                        center: location.coordinate,
+                        span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+                    )
+                    viewModel.updateStations(in: region)
+                }
             }
             .onMapCameraChange(frequency: .onEnd) { context in
-                // 2. 넓어진 범위에 맞춰 주유소 다시 불러오기
+                // 현재 줌 레벨 업데이트 (애니메이션용)
+                currentSpan = context.region.span.latitudeDelta
+                
+                // 넓어진 범위에 맞춰 주유소 다시 불러오기
                 viewModel.updateStations(in: context.region)
             }
             .sheet(isPresented: $showSheet) {
@@ -97,11 +109,11 @@ struct MapView: View {
 
 // MARK: - Price Annotation
 struct PriceAnnotationView: View {
-    @ObservedObject var viewModel: GasMapViewModel
     @AppStorage("priceOffset") private var priceOffset: Int = 30
     
     let station: GasStation
     let isSelected: Bool
+    let averagePrice: Double
     
     var body: some View {
         VStack(spacing: 0) {
@@ -119,8 +131,8 @@ struct PriceAnnotationView: View {
     }
     
     private var currentLevel: PriceLevel {
-        station.calculatePriceLevel(average: viewModel.averagePriceValue, offset: priceOffset)
-    }
+            station.calculatePriceLevel(average: averagePrice, offset: priceOffset)
+        }
     
     private var priceColor: Color {
         switch currentLevel {
