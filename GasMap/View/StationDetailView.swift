@@ -3,8 +3,11 @@ import MapKit
 
 struct StationDetailView: View {
     @EnvironmentObject var viewModel: GasMapViewModel
-    let station: GasStation
+    @Environment(\.openURL) var openURL
     @Environment(\.dismiss) var dismiss
+
+    let station: GasStation
+    @State private var showAddRecord = false
 
     var body: some View {
         NavigationStack {
@@ -30,6 +33,10 @@ struct StationDetailView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("닫기") { dismiss() }
                 }
+            }
+            .sheet(isPresented: $showAddRecord) {
+                AddFuelRecordView(station: station)
+                    .environmentObject(viewModel)
             }
         }
     }
@@ -64,32 +71,55 @@ struct StationDetailView: View {
 
     private var infoSection: some View {
         VStack(spacing: 0) {
+            if let address = station.address, !address.isEmpty {
+                InfoRow(icon: "mappin", label: "주소", value: address)
+                Divider().padding(.leading, 40)
+            }
             InfoRow(icon: "location", label: "거리", value: station.formattedDistance)
+            if let tel = station.tel, !tel.isEmpty {
+                Divider().padding(.leading, 40)
+                InfoRow(icon: "phone", label: "전화", value: tel)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        let cleaned = tel.replacingOccurrences(of: "-", with: "")
+                        if let url = URL(string: "tel://\(cleaned)") {
+                            openURL(url)
+                        }
+                    }
+            }
         }
         .background(Color(.systemGray6))
         .cornerRadius(16)
     }
 
     private var actionButtons: some View {
-        HStack(spacing: 12) {
-            Button {
-                openNavigation()
-            } label: {
-                Label("길찾기", systemImage: "map.fill")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.orange)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .font(.system(size: 15, weight: .semibold))
+        VStack(spacing: 10) {
+            HStack(spacing: 12) {
+                Button { openNavigation() } label: {
+                    Label("길찾기", systemImage: "map.fill")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.orange)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                        .font(.system(size: 15, weight: .semibold))
+                }
+                ShareLink(item: shareText) {
+                    Label("공유", systemImage: "square.and.arrow.up")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color(.systemGray5))
+                        .foregroundColor(.primary)
+                        .cornerRadius(12)
+                        .font(.system(size: 15, weight: .semibold))
+                }
             }
-
-            ShareLink(item: shareText) {
-                Label("공유", systemImage: "square.and.arrow.up")
+            Button { showAddRecord = true } label: {
+                Label("주유 기록 추가", systemImage: "fuelpump.fill")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color(.systemGray5))
-                    .foregroundColor(.primary)
+                    .background(Color.blue.opacity(0.1))
+                    .foregroundColor(.blue)
                     .cornerRadius(12)
                     .font(.system(size: 15, weight: .semibold))
             }
