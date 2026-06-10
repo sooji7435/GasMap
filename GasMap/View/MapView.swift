@@ -16,7 +16,7 @@ struct MapView: View {
     var body: some View {
         ZStack {
             Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
-                ForEach(viewModel.stations) { station in
+                ForEach(viewModel.filteredStations) { station in
                     Annotation(station.name, coordinate: station.coordinate) {
                         PriceAnnotationView(
                             station: station,

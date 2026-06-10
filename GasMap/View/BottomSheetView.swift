@@ -10,8 +10,6 @@ struct BottomSheetView: View {
     
     @Binding var cameraPosition: MapCameraPosition
     
-    @AppStorage("priceOffset") private var priceOffset: Int = 30
-    
     var body: some View {
         VStack(spacing: 5) {
             // Header: 연료 탭 + 통계
@@ -55,11 +53,10 @@ struct BottomSheetView: View {
                         ZStack {
                             Capsule()
                                 .frame(width: 70, height: 30)
-                                .foregroundStyle(Color(.systemGray6))
-                            
+                                .foregroundStyle(viewModel.selectedBrands.isEmpty ? Color(.systemGray6) : Color.orange.opacity(0.15))
                             Image(systemName: "slider.horizontal.3")
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(viewModel.selectedBrands.isEmpty ? .secondary : .orange)
                                 .padding(.horizontal, 14)
                                 .padding(.vertical, 6)
                         }
@@ -71,7 +68,7 @@ struct BottomSheetView: View {
             
             // Stats row
             HStack(spacing: 12) {
-                StatCard(label: "주변 주유소", value: "\(viewModel.stations.count)개")
+                    StatCard(label: "주변 주유소", value: "\(viewModel.filteredStations.count)개")
                 StatCard(label: "최저가", value: viewModel.cheapestPrice, valueColor: .green)
                 StatCard(label: "평균가", value: viewModel.averagePrice, valueColor: .orange)
             }
@@ -79,8 +76,9 @@ struct BottomSheetView: View {
         }
         .padding(.bottom, 8)
         .sheet(isPresented: $showFilterSheet) {
-            FilterSettingsView(offset: $priceOffset) // 설정 시트
-                .presentationDetents([.height(250)])
+            FilterSettingsView()
+                .environmentObject(viewModel)
+                .presentationDetents([.height(420)])
         }
     }
     
@@ -110,7 +108,7 @@ struct BottomSheetView: View {
     private var stationListView: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 0) {
-                ForEach(viewModel.stations) { station in
+                ForEach(viewModel.filteredStations) { station in
                     StationRowView(
                         cameraPosition: $cameraPosition,
                         station: station,

@@ -15,6 +15,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var activeTab: Tab = .map
     @Published var searchRadius: Int = 5
     @Published var favoriteStations: [GasStation] = []
+    @Published var selectedBrands: Set<String> = []
 
     @AppStorage("priceOffset") private var priceOffset: Int = 30
 
@@ -39,27 +40,35 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         completer.delegate = self
         completer.resultTypes = .address
         loadFavorites()
+        loadSelectedBrands()
+    }
+
+    var filteredStations: [GasStation] {
+        guard !selectedBrands.isEmpty else { return stations }
+        let mainBrands: Set<String> = ["SKE", "GSC", "HDO", "SOL"]
+        return stations.filter { station in
+            if selectedBrands.contains(station.brand) { return true }
+            if selectedBrands.contains("OTHER") && !mainBrands.contains(station.brand) { return true }
+            return false
+        }
     }
 
     var sortedByPrice: [GasStation] {
-        stations.sorted {
-            if $0.price == $1.price {
-                return $0.distance < $1.distance  // 가격 같으면 거리 가까운 순
-            }
+        filteredStations.sorted {
+            if $0.price == $1.price { return $0.distance < $1.distance }
             return $0.price < $1.price
         }
     }
 
     var cheapestPrice: String {
-        guard let min = stations.min(by: { $0.price < $1.price }) else { return "-" }
-        
+        guard let min = filteredStations.min(by: { $0.price < $1.price }) else { return "-" }
         return min.formattedPrice
     }
 
     var averagePriceValue: Double {
-        guard !stations.isEmpty else { return 0 }
-        let total = stations.map(\.price).reduce(0, +)
-        return Double(total) / Double(stations.count)
+        guard !filteredStations.isEmpty else { return 0 }
+        let total = filteredStations.map(\.price).reduce(0, +)
+        return Double(total) / Double(filteredStations.count)
     }
 
     var averagePrice: String {
@@ -190,6 +199,26 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
                 stationSearchResults = []
             }
         }
+    }
+
+    // MARK: - Brand Filter
+    func toggleBrand(_ code: String) {
+        if selectedBrands.contains(code) {
+            selectedBrands.remove(code)
+        } else {
+            selectedBrands.insert(code)
+        }
+        UserDefaults.standard.set(Array(selectedBrands), forKey: "selectedBrands")
+    }
+
+    func clearBrandFilter() {
+        selectedBrands = []
+        UserDefaults.standard.removeObject(forKey: "selectedBrands")
+    }
+
+    private func loadSelectedBrands() {
+        let saved = UserDefaults.standard.stringArray(forKey: "selectedBrands") ?? []
+        selectedBrands = Set(saved)
     }
 
     // MARK: - Favorites
