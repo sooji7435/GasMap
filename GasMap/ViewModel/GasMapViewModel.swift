@@ -21,6 +21,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var sortOrder: SortOrder = .price
     @Published var manualRadius: Int? = nil
     @Published var fuelRecords: [FuelRecord] = []
+    @Published var searchHistory: [SearchRecord] = []
 
     enum SortOrder { case price, distance }
 
@@ -49,6 +50,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         loadFavorites()
         loadSelectedBrands()
         loadFuelRecords()
+        loadSearchHistory()
     }
 
     var filteredStations: [GasStation] {
@@ -217,11 +219,14 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
                 handler(nil)
                 return
             }
+            let coord = item.placemark.coordinate
             let region = MKCoordinateRegion(
-                center: item.placemark.coordinate,
+                center: coord,
                 span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
             )
             DispatchQueue.main.async {
+                self.addSearchHistory(name: completion.title, subtitle: completion.subtitle,
+                                      lat: coord.latitude, lon: coord.longitude)
                 handler(region)
             }
         }
@@ -243,6 +248,36 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
             } catch {
                 stationSearchResults = []
             }
+        }
+    }
+
+    // MARK: - Search History
+    func addSearchHistory(name: String, subtitle: String, lat: Double, lon: Double) {
+        searchHistory.removeAll { $0.name == name }
+        searchHistory.insert(SearchRecord(id: UUID(), name: name, subtitle: subtitle, lat: lat, lon: lon, date: Date()), at: 0)
+        if searchHistory.count > 10 { searchHistory = Array(searchHistory.prefix(10)) }
+        saveSearchHistory()
+    }
+
+    func removeSearchHistory(id: UUID) {
+        searchHistory.removeAll { $0.id == id }
+        saveSearchHistory()
+    }
+
+    func clearSearchHistory() {
+        searchHistory = []
+        UserDefaults.standard.removeObject(forKey: "searchHistory")
+    }
+
+    private func loadSearchHistory() {
+        guard let data = UserDefaults.standard.data(forKey: "searchHistory"),
+              let decoded = try? JSONDecoder().decode([SearchRecord].self, from: data) else { return }
+        searchHistory = decoded
+    }
+
+    private func saveSearchHistory() {
+        if let encoded = try? JSONEncoder().encode(searchHistory) {
+            UserDefaults.standard.set(encoded, forKey: "searchHistory")
         }
     }
 
@@ -363,6 +398,8 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     func moveToStation(_ station: StationSearchResult, handler: @escaping (MKCoordinateRegion?) -> Void) {
         let coordinate = CoordinateConverter.katecToWGS84(x: station.katecX, y: station.katecY)
+        addSearchHistory(name: station.name, subtitle: station.address,
+                         lat: coordinate.latitude, lon: coordinate.longitude)
         let region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude),
             span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
