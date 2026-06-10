@@ -7,10 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AABB000CAABB000CAABB000C /* GasMapWidget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = AABB0001AABB0001AABB0001 /* GasMapWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AABB000CAABB000CAABB000C /* GasMapWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AABB0001AABB0001AABB0001 /* GasMapWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F8BD61482FD9DEF100E50BB7 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = F8BD61472FD9DEF100E50BB7 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AABB000DAABB000DAABB000D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F83CF7CC2F920A600043739A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AABB0007AABB0007AABB0007;
+			remoteInfo = GasMapWidget;
+		};
 		F83CF7E22F920A610043739A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F83CF7CC2F920A600043739A /* Project object */;
@@ -25,55 +33,56 @@
 			remoteGlobalIDString = F83CF7D32F920A600043739A;
 			remoteInfo = OilMap;
 		};
-		AABB000DAABB000DAABB000D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F83CF7CC2F920A600043739A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = AABB0007AABB0007AABB0007;
-			remoteInfo = GasMapWidget;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		AABB000BAABB000BAABB000B /* Embed App Extensions */ = {
+		AABB000BAABB000BAABB000B /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				AABB000CAABB000CAABB000C /* GasMapWidget.appex in Embed App Extensions */,
+				AABB000CAABB000CAABB000C /* GasMapWidget.appex in Embed Foundation Extensions */,
 			);
-			name = "Embed App Extensions";
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AABB0001AABB0001AABB0001 /* GasMapWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GasMapWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		F83CF7D42F920A600043739A /* GasMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GasMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F83CF7E12F920A610043739A /* GasMapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GasMapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F83CF7EB2F920A610043739A /* GasMapUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GasMapUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AABB0001AABB0001AABB0001 /* GasMapWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GasMapWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		F83CF8882F9216450043739A /* Exceptions for "GasMap" folder in "GasMap" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = F83CF7D32F920A600043739A /* GasMap */;
-		};
 		AABB0003AABB0003AABB0003 /* Exceptions for "GasMapWidget" folder in "GasMapWidget" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				GasMapWidget.entitlements,
 			);
 			target = AABB0007AABB0007AABB0007 /* GasMapWidget */;
+		};
+		F83CF8882F9216450043739A /* Exceptions for "GasMap" folder in "GasMap" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				Secrets.xcconfig,
+			);
+			target = F83CF7D32F920A600043739A /* GasMap */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		AABB0002AABB0002AABB0002 /* GasMapWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AABB0003AABB0003AABB0003 /* Exceptions for "GasMapWidget" folder in "GasMapWidget" target */,
+			);
+			path = GasMapWidget;
+			sourceTree = "<group>";
+		};
 		F83CF7D62F920A600043739A /* GasMap */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -92,21 +101,21 @@
 			path = GasMapUITests;
 			sourceTree = "<group>";
 		};
-		AABB0002AABB0002AABB0002 /* GasMapWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				AABB0003AABB0003AABB0003 /* Exceptions for "GasMapWidget" folder in "GasMapWidget" target */,
-			);
-			path = GasMapWidget;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AABB0004AABB0004AABB0004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F83CF7D12F920A600043739A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8BD61482FD9DEF100E50BB7 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,13 +133,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AABB0004AABB0004AABB0004 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -141,6 +143,7 @@
 				AABB0002AABB0002AABB0002 /* GasMapWidget */,
 				F83CF7E42F920A610043739A /* GasMapTests */,
 				F83CF7EE2F920A610043739A /* GasMapUITests */,
+				F8BD61462FD9DEF100E50BB7 /* Frameworks */,
 				F83CF7D52F920A600043739A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -156,9 +159,38 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F8BD61462FD9DEF100E50BB7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		AABB0007AABB0007AABB0007 /* GasMapWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AABB000AAABB000AAABB000A /* Build configuration list for PBXNativeTarget "GasMapWidget" */;
+			buildPhases = (
+				AABB0006AABB0006AABB0006 /* Sources */,
+				AABB0004AABB0004AABB0004 /* Frameworks */,
+				AABB0005AABB0005AABB0005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AABB0002AABB0002AABB0002 /* GasMapWidget */,
+			);
+			name = GasMapWidget;
+			packageProductDependencies = (
+			);
+			productName = GasMapWidget;
+			productReference = AABB0001AABB0001AABB0001 /* GasMapWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		F83CF7D32F920A600043739A /* GasMap */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F83CF7F52F920A610043739A /* Build configuration list for PBXNativeTarget "GasMap" */;
@@ -166,7 +198,7 @@
 				F83CF7D02F920A600043739A /* Sources */,
 				F83CF7D12F920A600043739A /* Frameworks */,
 				F83CF7D22F920A600043739A /* Resources */,
-				AABB000BAABB000BAABB000B /* Embed App Extensions */,
+				AABB000BAABB000BAABB000B /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -178,6 +210,7 @@
 			);
 			name = GasMap;
 			packageProductDependencies = (
+				F8BD61472FD9DEF100E50BB7 /* GoogleMobileAds */,
 			);
 			productName = OilMap;
 			productReference = F83CF7D42F920A600043739A /* GasMap.app */;
@@ -229,28 +262,6 @@
 			productReference = F83CF7EB2F920A610043739A /* GasMapUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		AABB0007AABB0007AABB0007 /* GasMapWidget */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AABB000AAABB000AAABB000A /* Build configuration list for PBXNativeTarget "GasMapWidget" */;
-			buildPhases = (
-				AABB0006AABB0006AABB0006 /* Sources */,
-				AABB0004AABB0004AABB0004 /* Frameworks */,
-				AABB0005AABB0005AABB0005 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				AABB0002AABB0002AABB0002 /* GasMapWidget */,
-			);
-			name = GasMapWidget;
-			packageProductDependencies = (
-			);
-			productName = GasMapWidget;
-			productReference = AABB0001AABB0001AABB0001 /* GasMapWidget.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -259,8 +270,11 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2640;
-				LastUpgradeCheck = 2640;
+				LastUpgradeCheck = 2650;
 				TargetAttributes = {
+					AABB0007AABB0007AABB0007 = {
+						CreatedOnToolsVersion = 26.4;
+					};
 					F83CF7D32F920A600043739A = {
 						CreatedOnToolsVersion = 26.4;
 					};
@@ -271,9 +285,6 @@
 					F83CF7EA2F920A610043739A = {
 						CreatedOnToolsVersion = 26.4;
 						TestTargetID = F83CF7D32F920A600043739A;
-					};
-					AABB0007AABB0007AABB0007 = {
-						CreatedOnToolsVersion = 26.4;
 					};
 				};
 			};
@@ -286,6 +297,9 @@
 			);
 			mainGroup = F83CF7CB2F920A600043739A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F8BD61452FD9DECF00E50BB7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F83CF7D52F920A600043739A /* Products */;
 			projectDirPath = "";
@@ -300,6 +314,13 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AABB0005AABB0005AABB0005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F83CF7D22F920A600043739A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -321,16 +342,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AABB0005AABB0005AABB0005 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AABB0006AABB0006AABB0006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
 		F83CF7D02F920A600043739A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -352,16 +373,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AABB0006AABB0006AABB0006 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AABB000EAABB000EAABB000E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AABB0007AABB0007AABB0007 /* GasMapWidget */;
+			targetProxy = AABB000DAABB000DAABB000D /* PBXContainerItemProxy */;
+		};
 		F83CF7E32F920A610043739A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F83CF7D32F920A600043739A /* GasMap */;
@@ -372,14 +391,71 @@
 			target = F83CF7D32F920A600043739A /* GasMap */;
 			targetProxy = F83CF7EC2F920A610043739A /* PBXContainerItemProxy */;
 		};
-		AABB000EAABB000EAABB000E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = AABB0007AABB0007AABB0007 /* GasMapWidget */;
-			targetProxy = AABB000DAABB000DAABB000D /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AABB0008AABB0008AABB0008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GasMapWidget/GasMapWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 452H92CGNL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GasMapWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "싸유 위젯";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.younsu.park.GasMap.GasMapWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AABB0009AABB0009AABB0009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GasMapWidget/GasMapWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 452H92CGNL;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GasMapWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "싸유 위젯";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = me.younsu.park.GasMap.GasMapWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		F83CF7F32F920A610043739A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = F83CF7D62F920A600043739A /* GasMap */;
@@ -441,6 +517,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -500,6 +577,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -661,71 +739,18 @@
 			};
 			name = Release;
 		};
-		AABB0008AABB0008AABB0008 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = GasMapWidget/GasMapWidget.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 452H92CGNL;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = GasMapWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "싸유 위젯";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "me.younsu.park.GasMap.GasMapWidget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		AABB0009AABB0009AABB0009 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = GasMapWidget/GasMapWidget.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 452H92CGNL;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = GasMapWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "싸유 위젯";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "me.younsu.park.GasMap.GasMapWidget";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AABB000AAABB000AAABB000A /* Build configuration list for PBXNativeTarget "GasMapWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AABB0008AABB0008AABB0008 /* Debug */,
+				AABB0009AABB0009AABB0009 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F83CF7CF2F920A600043739A /* Build configuration list for PBXProject "GasMap" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -762,16 +787,26 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AABB000AAABB000AAABB000A /* Build configuration list for PBXNativeTarget "GasMapWidget" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AABB0008AABB0008AABB0008 /* Debug */,
-				AABB0009AABB0009AABB0009 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F8BD61452FD9DECF00E50BB7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F8BD61472FD9DEF100E50BB7 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F8BD61452FD9DECF00E50BB7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F83CF7CC2F920A600043739A /* Project object */;
 }
