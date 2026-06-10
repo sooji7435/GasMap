@@ -24,7 +24,7 @@ struct MapView: View {
 
     private var snapHeights: [CGFloat] {
         let h = UIScreen.main.bounds.height
-        return [180, h * 0.5, h * 0.85]
+        return [180, h * 0.5, h * 0.72]
     }
 
     @AppStorage("priceOffset") private var priceOffset: Int = 30
@@ -118,7 +118,7 @@ struct MapView: View {
                         DragGesture(minimumDistance: 5)
                             .onChanged { value in
                                 let proposed = baseSheetHeight - value.translation.height
-                                sheetHeight = max(120, min(UIScreen.main.bounds.height * 0.85, proposed))
+                                sheetHeight = max(120, min(UIScreen.main.bounds.height * 0.72, proposed))
                             }
                             .onEnded { _ in
                                 let snap = snapHeights.min(by: { abs($0 - sheetHeight) < abs($1 - sheetHeight) })!
