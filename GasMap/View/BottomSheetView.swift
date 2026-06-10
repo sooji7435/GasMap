@@ -115,6 +115,7 @@ struct BottomSheetView: View {
             HStack {
                 Spacer()
                 Button {
+                    HapticManager.selection()
                     viewModel.sortOrder = viewModel.sortOrder == .price ? .distance : .price
                 } label: {
                     HStack(spacing: 4) {

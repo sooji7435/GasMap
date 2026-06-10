@@ -124,12 +124,14 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
     
     func selectStation(_ station: GasStation) {
+        HapticManager.impact(.light)
         withAnimation(.spring(response: 0.3)) {
             selectedStation = selectedStation?.id == station.id ? nil : station
         }
     }
 
     func changeFuelType(_ type: FuelType, coordinate: CLLocationCoordinate2D) {
+        HapticManager.selection()
         selectedFuelType = type
         UserDefaults.standard.set(type.rawValue, forKey: "selectedFuelType")
         loadStations(coordinate: coordinate)
@@ -325,8 +327,10 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     func toggleFavorite(_ station: GasStation) {
         if let index = favoriteStations.firstIndex(where: { $0.id == station.id }) {
             favoriteStations.remove(at: index)
+            HapticManager.impact(.light)
         } else {
             favoriteStations.append(station)
+            HapticManager.success()
         }
         saveFavorites()
     }
@@ -377,6 +381,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         )
         fuelRecords.insert(record, at: 0)
         saveFuelRecords()
+        HapticManager.success()
     }
 
     func deleteFuelRecord(id: UUID) {
