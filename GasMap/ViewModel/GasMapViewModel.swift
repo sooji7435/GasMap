@@ -16,6 +16,9 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var searchRadius: Int = 5
     @Published var favoriteStations: [GasStation] = []
     @Published var selectedBrands: Set<String> = []
+    @Published var sortOrder: SortOrder = .price
+
+    enum SortOrder { case price, distance }
 
     @AppStorage("priceOffset") private var priceOffset: Int = 30
 
@@ -53,10 +56,15 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         }
     }
 
-    var sortedByPrice: [GasStation] {
-        filteredStations.sorted {
-            if $0.price == $1.price { return $0.distance < $1.distance }
-            return $0.price < $1.price
+    var sortedStations: [GasStation] {
+        switch sortOrder {
+        case .price:
+            return filteredStations.sorted {
+                if $0.price == $1.price { return $0.distance < $1.distance }
+                return $0.price < $1.price
+            }
+        case .distance:
+            return filteredStations.sorted { $0.distance < $1.distance }
         }
     }
 

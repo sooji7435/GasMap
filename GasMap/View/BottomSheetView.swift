@@ -106,21 +106,46 @@ struct BottomSheetView: View {
     
     // MARK: - Station List
     private var stationListView: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                ForEach(viewModel.filteredStations) { station in
-                    StationRowView(
-                        cameraPosition: $cameraPosition,
-                        station: station,
-                        isSelected: viewModel.selectedStation?.id == station.id
-                    )
-                    .onTapGesture {
-                        viewModel.selectStation(station)
+        VStack(spacing: 0) {
+            // 정렬 토글
+            HStack {
+                Spacer()
+                Button {
+                    viewModel.sortOrder = viewModel.sortOrder == .price ? .distance : .price
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.up.arrow.down")
+                            .font(.system(size: 11, weight: .semibold))
+                        Text(viewModel.sortOrder == .price ? "가격순" : "거리순")
+                            .font(.system(size: 12, weight: .semibold))
                     }
-                    Divider().padding(.leading, 62)
+                    .foregroundColor(.orange)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color.orange.opacity(0.1))
+                    .cornerRadius(8)
                 }
             }
-            .padding(.top, 4)
+            .padding(.horizontal, 16)
+            .padding(.top, 6)
+            .padding(.bottom, 2)
+
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    ForEach(viewModel.sortedStations) { station in
+                        StationRowView(
+                            cameraPosition: $cameraPosition,
+                            station: station,
+                            isSelected: viewModel.selectedStation?.id == station.id
+                        )
+                        .onTapGesture {
+                            viewModel.selectStation(station)
+                        }
+                        Divider().padding(.leading, 62)
+                    }
+                }
+                .padding(.top, 4)
+            }
         }
     }
     
@@ -137,7 +162,7 @@ struct BottomSheetView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 8)
                 
-                ForEach(Array(viewModel.sortedByPrice.prefix(10).enumerated()), id: \.element.id) { index, station in
+                ForEach(Array(viewModel.sortedStations.prefix(10).enumerated()), id: \.element.id) { index, station in
                     RankingRowView(station: station, rank: index + 1)
                     Divider().padding(.leading, 56)
                 }
