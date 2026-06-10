@@ -10,7 +10,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var searchCompletions: [MKLocalSearchCompletion] = []
     @Published var stationSearchResults: [StationSearchResult] = []
     @Published var selectedStation: GasStation?
-    @Published var selectedFuelType: FuelType = .gasoline
+    @Published var selectedFuelType: FuelType
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var activeTab: Tab = .map
@@ -29,11 +29,16 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     private let apiService = OpinetService()
     private let completer = MKLocalSearchCompleter()
     private var cancellables = Set<AnyCancellable>()
+    private var fetchTask: Task<Void, Never>?
+    private var lastFetchCenter: CLLocationCoordinate2D?
+    private var lastFetchRadius: Int = 0
     
     override init() {
+        let savedRaw = UserDefaults.standard.string(forKey: "selectedFuelType") ?? FuelType.gasoline.rawValue
+        self.selectedFuelType = FuelType(rawValue: savedRaw) ?? .gasoline
         super.init()
-                completer.delegate = self
-                completer.resultTypes = .address
+        completer.delegate = self
+        completer.resultTypes = .address
     }
 
     var sortedByPrice: [GasStation] {
@@ -72,24 +77,26 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     // MARK: - Load Stations
     func loadStations(coordinate: CLLocationCoordinate2D, radius: Int? = nil) {
         let finalRadius = radius ?? searchRadius
-        
+
+        fetchTask?.cancel()
         isLoading = true
         errorMessage = nil
-        
-        Task {
-            [weak self] in
+
+        fetchTask = Task { [weak self] in
             guard let self else { return }
-            
-            defer { isLoading = false }
+            defer { self.isLoading = false }
 
             do {
-                stations = try await apiService.fetchNearbyStations(
+                let result = try await self.apiService.fetchNearbyStations(
                     coordinate: coordinate,
-                    fuelType: selectedFuelType,
+                    fuelType: self.selectedFuelType,
                     radius: finalRadius
                 )
+                guard !Task.isCancelled else { return }
+                self.stations = result
             } catch {
-                errorMessage = error.localizedDescription
+                guard !Task.isCancelled else { return }
+                self.errorMessage = error.localizedDescription
             }
         }
     }
@@ -102,13 +109,25 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     func changeFuelType(_ type: FuelType, coordinate: CLLocationCoordinate2D) {
         selectedFuelType = type
+        UserDefaults.standard.set(type.rawValue, forKey: "selectedFuelType")
         loadStations(coordinate: coordinate)
     }
     
     func updateStations(in region: MKCoordinateRegion) {
         let radius = calculateRadius(from: region.span.latitudeDelta)
-        
-        // 계산된 반경을 사용하여 데이터 로드
+
+        // 이전 fetch 위치에서 반경의 30% 미만 이동 + 반경 동일 → API 호출 스킵
+        if let last = lastFetchCenter {
+            let latDiff = abs(region.center.latitude - last.latitude)
+            let lonDiff = abs(region.center.longitude - last.longitude)
+            let threshold = Double(radius) * 0.3 / 111.0  // 반경(km)의 30%를 위도 단위로 변환
+            if latDiff < threshold && lonDiff < threshold && radius == lastFetchRadius {
+                return
+            }
+        }
+
+        lastFetchCenter = region.center
+        lastFetchRadius = radius
         loadStations(coordinate: region.center, radius: radius)
     }
     
@@ -159,10 +178,9 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     
     // delegate
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        print("📍 장소 자동완성 결과: \(completer.results.count)개") // 추가
         searchCompletions = completer.results
     }
-    
+
     func searchStationsByName(query: String) {
         guard !query.isEmpty else {
             stationSearchResults = []
@@ -170,12 +188,8 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         }
         Task {
             do {
-                let results = try await apiService.searchStationsByName(name: query)
-                print("✅ 주유소 검색 결과: \(results.count)개") // 추가
-                results.forEach { print("  - \($0.name), \($0.address)") } // 추가
-                stationSearchResults = results
+                stationSearchResults = try await apiService.searchStationsByName(name: query)
             } catch {
-                print("❌ 주유소 검색 실패: \(error)") // 추가
                 stationSearchResults = []
             }
         }

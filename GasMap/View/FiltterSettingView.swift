@@ -25,7 +25,7 @@ struct FilterSettingsView: View {
                     Slider(value: Binding(
                         get: { Double(offset) },
                         set: { offset = Int($0) }
-                    ), in: 0...100, step: 5)
+                    ), in: 0...500, step: 10)
                     .tint(.green)
                 }
                 .padding(.horizontal)

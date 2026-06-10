@@ -67,7 +67,7 @@ struct GasStation: Identifiable, Codable {
     }
     
     var formattedDistance: String {
-        if distance < 1.0 {
+        if distance < 1000 {
             return String(format: "%.0fm", distance)
         } else {
             return String(format: "%.1fkm", distance / 1000)
