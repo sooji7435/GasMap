@@ -96,45 +96,43 @@ struct MapView: View {
                 .padding(.bottom, sheetHeight + 80)
             }
 
-            // MARK: 바텀시트 + 배너 (고정)
-            VStack(spacing: 0) {
-                BottomSheetView(cameraPosition: $cameraPosition)
-                    .environmentObject(viewModel)
-                    .environmentObject(locationManager)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: sheetHeight)
-                    .background(
-                        UnevenRoundedRectangle(
-                            topLeadingRadius: 16,
-                            bottomLeadingRadius: 0,
-                            bottomTrailingRadius: 0,
-                            topTrailingRadius: 16
-                        )
-                        .fill(.regularMaterial)
-                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
+            // MARK: 바텀시트
+            BottomSheetView(cameraPosition: $cameraPosition)
+                .environmentObject(viewModel)
+                .environmentObject(locationManager)
+                .frame(maxWidth: .infinity)
+                .frame(height: sheetHeight)
+                .background(
+                    UnevenRoundedRectangle(
+                        topLeadingRadius: 16,
+                        bottomLeadingRadius: 0,
+                        bottomTrailingRadius: 0,
+                        topTrailingRadius: 16
                     )
-                    .gesture(
-                        DragGesture(minimumDistance: 5)
-                            .onChanged { value in
-                                let proposed = baseSheetHeight - value.translation.height
-                                sheetHeight = max(120, min(UIScreen.main.bounds.height * 0.9, proposed))
+                    .fill(.regularMaterial)
+                    .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
+                )
+                .gesture(
+                    DragGesture(minimumDistance: 5)
+                        .onChanged { value in
+                            let proposed = baseSheetHeight - value.translation.height
+                            sheetHeight = max(120, min(UIScreen.main.bounds.height * 0.85, proposed))
+                        }
+                        .onEnded { _ in
+                            let snap = snapHeights.min(by: { abs($0 - sheetHeight) < abs($1 - sheetHeight) })!
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                sheetHeight = snap
                             }
-                            .onEnded { _ in
-                                let snap = snapHeights.min(by: { abs($0 - sheetHeight) < abs($1 - sheetHeight) })!
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                    sheetHeight = snap
-                                }
-                                baseSheetHeight = snap
-                            }
-                    )
-
-                // 배너 — 항상 고정
-                BannerAdView()
-                    .frame(height: 60)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(.systemBackground))
-            }
-            .ignoresSafeArea(edges: .bottom)
+                            baseSheetHeight = snap
+                        }
+                )
+        }
+        // 배너 — ZStack과 완전히 독립, 항상 하단에 고정
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            BannerAdView()
+                .frame(height: 60)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemBackground))
         }
         .sheet(item: $selectedDetailStation) { station in
             StationDetailView(station: station)
