@@ -14,7 +14,6 @@ struct ContentView: View {
         }
         .onAppear {
             locationManager.requestLocationPermission()
-            viewModel.loadStations(coordinate: locationManager.currentCoordinate)
         }
         .onChange(of: locationManager.userLocation) { _, coord in
             if let coord = coord {

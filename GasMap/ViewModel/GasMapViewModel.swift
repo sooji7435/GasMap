@@ -128,6 +128,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
         lastFetchCenter = region.center
         lastFetchRadius = radius
+        searchRadius = radius
         loadStations(coordinate: region.center, radius: radius)
     }
     

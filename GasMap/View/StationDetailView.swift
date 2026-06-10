@@ -6,16 +6,11 @@ struct StationDetailView: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
-                    // Price header
                     priceHeader
-
-                    // Info cards
                     infoSection
-
-                    // Action buttons
                     actionButtons
                 }
                 .padding()
@@ -47,20 +42,10 @@ struct StationDetailView: View {
             HStack(alignment: .lastTextBaseline, spacing: 4) {
                 Text(station.formattedPrice)
                     .font(.system(size: 40, weight: .bold))
-                    //.foregroundColor(priceColor)
                 Text("원/L")
                     .font(.title3)
                     .foregroundColor(.secondary)
             }
-            /*
-            Text(station.priceLevel.label)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 4)
-                .background(priceColor)
-                .cornerRadius(10)
-             */
         }
         .frame(maxWidth: .infinity)
         .padding()
@@ -70,81 +55,34 @@ struct StationDetailView: View {
 
     private var infoSection: some View {
         VStack(spacing: 0) {
-            //InfoRow(icon: "mappin", label: "주소", value: station.address)
-            Divider().padding(.leading, 40)
             InfoRow(icon: "location", label: "거리", value: station.formattedDistance)
-            Divider().padding(.leading, 40)
-            /*
-            if !station.tel!.isEmpty {
-                InfoRow(icon: "phone", label: "전화", value: station.tel)
-            }
-             */
         }
         .background(Color(.systemGray6))
         .cornerRadius(16)
     }
 
     private var actionButtons: some View {
-        HStack(spacing: 12) {
-            Button {
-                openNavigation()
-            } label: {
-                Label("길찾기", systemImage: "map.fill")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.orange)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                    .font(.system(size: 15, weight: .semibold))
-            }
-
-            /*
-            if !station.tel.isEmpty {
-                Button {
-                    callStation()
-                } label: {
-                    Label("전화", systemImage: "phone.fill")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color(.systemGray6))
-                        .foregroundColor(.primary)
-                        .cornerRadius(12)
-                        .font(.system(size: 15, weight: .semibold))
-                }
-            }
-             */
+        Button {
+            openNavigation()
+        } label: {
+            Label("길찾기", systemImage: "map.fill")
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.orange)
+                .foregroundColor(.white)
+                .cornerRadius(12)
+                .font(.system(size: 15, weight: .semibold))
         }
     }
-    /*
-    private var priceColor: Color {
-        switch station. {
-        case .cheap:     return Color("PriceCheap")
-        case .mid:       return Color("PriceMid")
-        case .expensive: return Color("PriceExpensive")
-        }
-    }
-     */
 
     private func openNavigation() {
         let placemark = MKPlacemark(coordinate: station.coordinate)
-        
         let item = MKMapItem(placemark: placemark)
         item.name = station.name
-        
-        let launchOptions: [String: Any] = [
+        item.openInMaps(launchOptions: [
             MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeDriving
-        ]
-        
-        item.openInMaps(launchOptions: launchOptions)
+        ])
     }
-    /*
-    private func callStation() {
-        let cleaned = station.tel.replacingOccurrences(of: "-", with: "")
-        if let url = URL(string: "tel://\(cleaned)") {
-            UIApplication.shared.open(url)
-        }
-    }
-     */
 }
 
 struct InfoRow: View {
