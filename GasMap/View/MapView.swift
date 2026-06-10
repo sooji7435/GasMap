@@ -18,6 +18,7 @@ struct MapView: View {
     @State private var currentSpan: Double = 0.02
     @State private var showSheet: Bool = true
     @State private var searchText = ""
+    @State private var selectedDetailStation: GasStation?
     
     @AppStorage("priceOffset") private var priceOffset: Int = 30
     
@@ -36,6 +37,7 @@ struct MapView: View {
                         .animation(.easeOut(duration: 0.2), value: currentSpan)
                         .onTapGesture {
                             viewModel.selectStation(station)
+                            selectedDetailStation = station
                         }
                         
                     }
@@ -101,7 +103,11 @@ struct MapView: View {
             }
         }
         .mapControls {
-            MapCompass() // 나침반만 유지
+            MapCompass()
+        }
+        .sheet(item: $selectedDetailStation) { station in
+            StationDetailView(station: station)
+                .environmentObject(viewModel)
         }
     }
 }
