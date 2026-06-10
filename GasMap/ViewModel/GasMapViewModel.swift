@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import CoreLocation
 import MapKit
+import WidgetKit
 
 @MainActor
 class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
@@ -110,6 +111,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
                 )
                 guard !Task.isCancelled else { return }
                 self.stations = result
+                self.saveWidgetData()
             } catch {
                 guard !Task.isCancelled else { return }
                 self.errorMessage = error.localizedDescription
@@ -240,6 +242,26 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
                 stationSearchResults = []
             }
         }
+    }
+
+    // MARK: - Widget Data
+    private struct WidgetStationData: Codable {
+        let name: String
+        let price: Int
+        let brand: String
+        let distance: String
+    }
+
+    private func saveWidgetData() {
+        let top3 = sortedStations.prefix(3).map {
+            WidgetStationData(name: $0.name, price: $0.price, brand: $0.brand, distance: $0.formattedDistance)
+        }
+        if let defaults = UserDefaults(suiteName: "group.me.younsu.park.GasMap"),
+           let encoded = try? JSONEncoder().encode(top3) {
+            defaults.set(encoded, forKey: "widgetStations")
+            defaults.set(Date(), forKey: "widgetUpdatedAt")
+        }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     // MARK: - Brand Filter
