@@ -15,11 +15,6 @@ struct ContentView: View {
         .onAppear {
             locationManager.requestLocationPermission()
         }
-        .onChange(of: locationManager.userLocation) { _, coord in
-            if let coord = coord {
-                viewModel.loadStations(coordinate: CLLocationCoordinate2D(latitude: coord.coordinate.latitude, longitude: coord.coordinate.longitude))
-            }
-        }
         .alert("위치 권한이 필요합니다", isPresented: $locationManager.isLocationDenied) {
             Button("확인") { exit(0) }
         } message: {

@@ -35,9 +35,6 @@ struct MapView: View {
                 // 유저 위치 표시 (필요시 전용 마커 추가 가능, 기본은 파란 점)
                 UserAnnotation()
             }
-            .onAppear {
-                locationManager.requestLocationPermission()
-            }
             .onChange(of: locationManager.currentCoordinate.latitude) { _, _ in
                 guard let location = locationManager.userLocation else { return }
                 

@@ -1,7 +1,6 @@
 import Foundation
 import SwiftUI
 import CoreLocation
-import Combine
 import MapKit
 
 @MainActor
@@ -28,7 +27,6 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     private let apiService = OpinetService()
     private let completer = MKLocalSearchCompleter()
-    private var cancellables = Set<AnyCancellable>()
     private var fetchTask: Task<Void, Never>?
     private var lastFetchCenter: CLLocationCoordinate2D?
     private var lastFetchRadius: Int = 0
@@ -56,22 +54,18 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         return min.formattedPrice
     }
 
-    var averagePrice: String {
-        guard !stations.isEmpty else { return "-" }
-        let total = stations.map(\.price).reduce(0, +)
-        let avg = Double(total) / Double(stations.count)
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        
-        formatter.maximumFractionDigits = 0
-        
-        return (formatter.string(from: NSNumber(value: avg)) ?? "\(avg)") + "원"
-    }
-    
     var averagePriceValue: Double {
         guard !stations.isEmpty else { return 0 }
         let total = stations.map(\.price).reduce(0, +)
         return Double(total) / Double(stations.count)
+    }
+
+    var averagePrice: String {
+        guard averagePriceValue > 0 else { return "-" }
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        return (formatter.string(from: NSNumber(value: averagePriceValue)) ?? "\(Int(averagePriceValue))") + "원"
     }
 
     // MARK: - Load Stations
