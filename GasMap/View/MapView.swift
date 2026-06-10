@@ -4,7 +4,7 @@ import MapKit
 struct MapView: View {
     @EnvironmentObject var viewModel: GasMapViewModel
     @EnvironmentObject var locationManager: LocationManager
-    
+
     @State private var cameraPosition: MapCameraPosition = {
         let lat = UserDefaults.standard.double(forKey: "lastLat")
         let lon = UserDefaults.standard.double(forKey: "lastLon")
@@ -16,38 +16,43 @@ struct MapView: View {
         return .region(MKCoordinateRegion(center: .init(latitude: lat, longitude: lon), span: span))
     }()
     @State private var currentSpan: Double = 0.02
-    @State private var showSheet: Bool = true
-    @State private var searchText = ""
     @State private var selectedDetailStation: GasStation?
-    
+
+    // 커스텀 바텀시트 상태
+    @State private var sheetHeight: CGFloat = 180
+    @State private var baseSheetHeight: CGFloat = 180
+
+    private var snapHeights: [CGFloat] {
+        let h = UIScreen.main.bounds.height
+        return [180, h * 0.5, h * 0.85]
+    }
+
     @AppStorage("priceOffset") private var priceOffset: Int = 30
-    
+
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
+            // MARK: 지도
             Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
                 ForEach(viewModel.filteredStations) { station in
                     Annotation(station.name, coordinate: station.coordinate) {
                         PriceAnnotationView(
                             station: station,
                             isSelected: viewModel.selectedStation?.id == station.id,
-                            averagePrice: viewModel.averagePriceValue  // 추가
+                            averagePrice: viewModel.averagePriceValue
                         )
-                        // 줌이 멀어질수록 크기를 더 작게 조절 (0.5배까지)
                         .scaleEffect(viewModel.calculateScale(span: currentSpan))
                         .animation(.easeOut(duration: 0.2), value: currentSpan)
                         .onTapGesture {
                             viewModel.selectStation(station)
                             selectedDetailStation = station
                         }
-                        
                     }
                 }
-                // 유저 위치 표시 (필요시 전용 마커 추가 가능, 기본은 파란 점)
                 UserAnnotation()
             }
+            .ignoresSafeArea()
             .onChange(of: locationManager.currentCoordinate.latitude) { _, _ in
                 guard let location = locationManager.userLocation else { return }
-                
                 if viewModel.stations.isEmpty {
                     let region = MKCoordinateRegion(
                         center: location.coordinate,
@@ -57,32 +62,21 @@ struct MapView: View {
                 }
             }
             .onMapCameraChange(frequency: .onEnd) { context in
-                // 현재 줌 레벨 업데이트 (애니메이션용)
                 currentSpan = context.region.span.latitudeDelta
-                
-                // 넓어진 범위에 맞춰 주유소 다시 불러오기
                 viewModel.updateStations(in: context.region)
             }
-            .sheet(isPresented: $showSheet) {
-                BottomSheetView(cameraPosition: $cameraPosition)
-                    .environmentObject(viewModel)
-                    .environmentObject(locationManager)
-                    .presentationDetents([.height(180), .medium, .large])
-                    .presentationBackgroundInteraction(.enabled(upThrough: .medium))
-                // 드래그 핸들 표시
-                    .presentationDragIndicator(.visible)
-                //sheet 제거 방지
-                    .interactiveDismissDisabled(true)
-            }
+            .mapControls { MapCompass() }
+
+            // MARK: 검색바
             VStack {
                 SearchBarView(cameraPosition: $cameraPosition)
                     .environmentObject(viewModel)
                     .padding(.top)
                     .padding(.horizontal, 16)
-                
                 Spacer()
             }
-            
+
+            // MARK: 위치 버튼
             VStack {
                 Spacer()
                 HStack {
@@ -99,11 +93,48 @@ struct MapView: View {
                     }
                 }
                 .padding(.trailing, 16)
-                .padding(.bottom, 200) // sheet 위로 올라오도록
+                .padding(.bottom, sheetHeight + 80)
             }
-        }
-        .mapControls {
-            MapCompass()
+
+            // MARK: 바텀시트 + 배너 (고정)
+            VStack(spacing: 0) {
+                BottomSheetView(cameraPosition: $cameraPosition)
+                    .environmentObject(viewModel)
+                    .environmentObject(locationManager)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: sheetHeight)
+                    .background(
+                        UnevenRoundedRectangle(
+                            topLeadingRadius: 16,
+                            bottomLeadingRadius: 0,
+                            bottomTrailingRadius: 0,
+                            topTrailingRadius: 16
+                        )
+                        .fill(.regularMaterial)
+                        .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: -2)
+                    )
+                    .gesture(
+                        DragGesture(minimumDistance: 5)
+                            .onChanged { value in
+                                let proposed = baseSheetHeight - value.translation.height
+                                sheetHeight = max(120, min(UIScreen.main.bounds.height * 0.9, proposed))
+                            }
+                            .onEnded { _ in
+                                let snap = snapHeights.min(by: { abs($0 - sheetHeight) < abs($1 - sheetHeight) })!
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                                    sheetHeight = snap
+                                }
+                                baseSheetHeight = snap
+                            }
+                    )
+
+                // 배너 — 항상 고정
+                BannerAdView()
+                    .frame(height: 60)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(.systemBackground))
+            }
+            .ignoresSafeArea(edges: .bottom)
         }
         .sheet(item: $selectedDetailStation) { station in
             StationDetailView(station: station)
@@ -113,15 +144,14 @@ struct MapView: View {
 }
 
 
-
 // MARK: - Price Annotation
 struct PriceAnnotationView: View {
     @AppStorage("priceOffset") private var priceOffset: Int = 30
-    
+
     let station: GasStation
     let isSelected: Bool
     let averagePrice: Double
-    
+
     var body: some View {
         VStack(spacing: 0) {
             Text(station.formattedPrice)
@@ -136,11 +166,11 @@ struct PriceAnnotationView: View {
         }
         .animation(.spring(response: 0.25), value: isSelected)
     }
-    
+
     private var currentLevel: PriceLevel {
-            station.calculatePriceLevel(average: averagePrice, offset: priceOffset)
-        }
-    
+        station.calculatePriceLevel(average: averagePrice, offset: priceOffset)
+    }
+
     private var priceColor: Color {
         switch currentLevel {
         case .cheap:     return Color("PriceCheap")

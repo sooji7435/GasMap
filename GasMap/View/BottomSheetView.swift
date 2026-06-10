@@ -12,12 +12,14 @@ struct BottomSheetView: View {
 
     var body: some View {
         VStack(spacing: 5) {
+            // 드래그 핸들
+            Capsule()
+                .fill(Color(.systemGray4))
+                .frame(width: 36, height: 4)
+                .padding(.top, 8)
+
             headerSection
             tabSelector
-
-            BannerAdView()
-                .frame(height: 60)
-                .padding(.horizontal, 16)
 
             if viewModel.isLoading && viewModel.activeTab != .favorites && viewModel.activeTab != .fuelLog {
                 loadingView
