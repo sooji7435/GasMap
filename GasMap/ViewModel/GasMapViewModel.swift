@@ -18,6 +18,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var selectedBrands: Set<String> = []
     @Published var sortOrder: SortOrder = .price
     @Published var manualRadius: Int? = nil
+    @Published var fuelRecords: [FuelRecord] = []
 
     enum SortOrder { case price, distance }
 
@@ -45,6 +46,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         completer.resultTypes = .address
         loadFavorites()
         loadSelectedBrands()
+        loadFuelRecords()
     }
 
     var filteredStations: [GasStation] {
@@ -287,6 +289,37 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     private func saveFavorites() {
         if let encoded = try? JSONEncoder().encode(favoriteStations) {
             UserDefaults.standard.set(encoded, forKey: "favoriteStations")
+        }
+    }
+
+    // MARK: - Fuel Records
+    func addFuelRecord(station: GasStation, liters: Double) {
+        let record = FuelRecord(
+            id: UUID(),
+            date: Date(),
+            stationID: station.id,
+            stationName: station.name,
+            pricePerLiter: station.price,
+            liters: liters
+        )
+        fuelRecords.insert(record, at: 0)
+        saveFuelRecords()
+    }
+
+    func deleteFuelRecord(id: UUID) {
+        fuelRecords.removeAll { $0.id == id }
+        saveFuelRecords()
+    }
+
+    private func loadFuelRecords() {
+        guard let data = UserDefaults.standard.data(forKey: "fuelRecords"),
+              let decoded = try? JSONDecoder().decode([FuelRecord].self, from: data) else { return }
+        fuelRecords = decoded
+    }
+
+    private func saveFuelRecords() {
+        if let encoded = try? JSONEncoder().encode(fuelRecords) {
+            UserDefaults.standard.set(encoded, forKey: "fuelRecords")
         }
     }
 
