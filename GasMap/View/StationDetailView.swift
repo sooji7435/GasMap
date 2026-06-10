@@ -71,17 +71,36 @@ struct StationDetailView: View {
     }
 
     private var actionButtons: some View {
-        Button {
-            openNavigation()
-        } label: {
-            Label("길찾기", systemImage: "map.fill")
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(12)
-                .font(.system(size: 15, weight: .semibold))
+        HStack(spacing: 12) {
+            Button {
+                openNavigation()
+            } label: {
+                Label("길찾기", systemImage: "map.fill")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.orange)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                    .font(.system(size: 15, weight: .semibold))
+            }
+
+            ShareLink(item: shareText) {
+                Label("공유", systemImage: "square.and.arrow.up")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color(.systemGray5))
+                    .foregroundColor(.primary)
+                    .cornerRadius(12)
+                    .font(.system(size: 15, weight: .semibold))
+            }
         }
+    }
+
+    private var shareText: String {
+        "⛽ \(station.name)\n" +
+        "💰 \(station.formattedPrice) / L\n" +
+        "📍 \(station.formattedDistance)\n" +
+        "GasMap에서 찾았어요"
     }
 
     private func openNavigation() {
