@@ -14,10 +14,11 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var errorMessage: String?
     @Published var activeTab: Tab = .map
     @Published var searchRadius: Int = 5
-    
+    @Published var favoriteStations: [GasStation] = []
+
     @AppStorage("priceOffset") private var priceOffset: Int = 30
 
-    enum Tab { case map, ranking }
+    enum Tab { case map, ranking, favorites }
     
     private enum RadiusConfig {
         static let multiplier: Double = 100
@@ -37,6 +38,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         super.init()
         completer.delegate = self
         completer.resultTypes = .address
+        loadFavorites()
     }
 
     var sortedByPrice: [GasStation] {
@@ -187,6 +189,36 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
             } catch {
                 stationSearchResults = []
             }
+        }
+    }
+
+    // MARK: - Favorites
+    func toggleFavorite(_ station: GasStation) {
+        if let index = favoriteStations.firstIndex(where: { $0.id == station.id }) {
+            favoriteStations.remove(at: index)
+        } else {
+            favoriteStations.append(station)
+        }
+        saveFavorites()
+    }
+
+    func isFavorite(_ station: GasStation) -> Bool {
+        favoriteStations.contains(where: { $0.id == station.id })
+    }
+
+    func currentData(for favorite: GasStation) -> GasStation {
+        stations.first(where: { $0.id == favorite.id }) ?? favorite
+    }
+
+    private func loadFavorites() {
+        guard let data = UserDefaults.standard.data(forKey: "favoriteStations"),
+              let decoded = try? JSONDecoder().decode([GasStation].self, from: data) else { return }
+        favoriteStations = decoded
+    }
+
+    private func saveFavorites() {
+        if let encoded = try? JSONEncoder().encode(favoriteStations) {
+            UserDefaults.standard.set(encoded, forKey: "favoriteStations")
         }
     }
 

@@ -21,12 +21,13 @@ struct BottomSheetView: View {
             tabSelector
             
             // Content
-            if viewModel.isLoading {
+            if viewModel.isLoading && viewModel.activeTab != .favorites {
                 loadingView
             } else {
                 switch viewModel.activeTab {
-                case .map:     stationListView
-                case .ranking: rankingView
+                case .map:       stationListView
+                case .ranking:   rankingView
+                case .favorites: favoritesView
                 }
             }
         }
@@ -92,6 +93,9 @@ struct BottomSheetView: View {
             TabButton(title: "최저가 랭킹", isActive: viewModel.activeTab == .ranking) {
                 viewModel.activeTab = .ranking
             }
+            TabButton(title: "즐겨찾기", isActive: viewModel.activeTab == .favorites, badge: viewModel.favoriteStations.isEmpty ? nil : "\(viewModel.favoriteStations.count)") {
+                viewModel.activeTab = .favorites
+            }
         }
         .padding(.horizontal, 16)
         .overlay(
@@ -144,6 +148,45 @@ struct BottomSheetView: View {
         }
     }
     
+    // MARK: - Favorites
+    private var favoritesView: some View {
+        Group {
+            if viewModel.favoriteStations.isEmpty {
+                VStack(spacing: 12) {
+                    Image(systemName: "heart.slash")
+                        .font(.system(size: 36))
+                        .foregroundColor(.secondary)
+                    Text("즐겨찾기한 주유소가 없어요")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    Text("주유소 목록에서 하트를 눌러 추가하세요")
+                        .font(.caption)
+                        .foregroundColor(Color(.systemGray3))
+                }
+                .frame(maxWidth: .infinity)
+                .padding(40)
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(viewModel.favoriteStations) { favorite in
+                            let station = viewModel.currentData(for: favorite)
+                            StationRowView(
+                                cameraPosition: $cameraPosition,
+                                station: station,
+                                isSelected: viewModel.selectedStation?.id == station.id
+                            )
+                            .onTapGesture {
+                                viewModel.selectStation(station)
+                            }
+                            Divider().padding(.leading, 62)
+                        }
+                    }
+                    .padding(.top, 4)
+                }
+            }
+        }
+    }
+
     // MARK: - Loading
     private var loadingView: some View {
         VStack(spacing: 16) {
@@ -209,14 +252,26 @@ struct StatCard: View {
 struct TabButton: View {
     let title: String
     let isActive: Bool
+    var badge: String? = nil
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             VStack(spacing: 6) {
-                Text(title)
-                    .font(.system(size: 14, weight: isActive ? .semibold : .regular))
-                    .foregroundColor(isActive ? .orange : .secondary)
+                HStack(spacing: 4) {
+                    Text(title)
+                        .font(.system(size: 14, weight: isActive ? .semibold : .regular))
+                        .foregroundColor(isActive ? .orange : .secondary)
+                    if let badge {
+                        Text(badge)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 2)
+                            .background(Color.red)
+                            .clipShape(Capsule())
+                    }
+                }
                 Rectangle()
                     .fill(isActive ? Color.orange : Color.clear)
                     .frame(height: 2)

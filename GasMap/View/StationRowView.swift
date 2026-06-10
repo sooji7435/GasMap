@@ -3,36 +3,42 @@ import MapKit
 
 // MARK: - Station Row
 struct StationRowView: View {
+    @EnvironmentObject var viewModel: GasMapViewModel
     @Binding var cameraPosition: MapCameraPosition
-    
+
     let station: GasStation
     let isSelected: Bool
 
     var body: some View {
         HStack(spacing: 12) {
-            // Info
             VStack(alignment: .leading, spacing: 2) {
                 Text(station.name)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.primary)
                     .lineLimit(1)
-                HStack(spacing: 6) {
-                    Text(station.formattedDistance)
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                }
+                Text(station.formattedDistance)
+                    .font(.system(size: 12))
+                    .foregroundColor(.secondary)
             }
 
             Spacer()
 
-            // Price
             VStack(alignment: .trailing, spacing: 2) {
                 Text("\(station.price)")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Color.black)
+                    .foregroundColor(.primary)
                 Text("원/L")
                     .font(.system(size: 11))
                     .foregroundColor(.secondary)
+            }
+
+            Button {
+                viewModel.toggleFavorite(station)
+            } label: {
+                Image(systemName: viewModel.isFavorite(station) ? "heart.fill" : "heart")
+                    .foregroundColor(viewModel.isFavorite(station) ? .red : Color(.systemGray3))
+                    .font(.system(size: 16))
+                    .frame(width: 28, height: 28)
             }
         }
         .padding(.horizontal, 16)
@@ -43,15 +49,6 @@ struct StationRowView: View {
             cameraPosition = .region(MKCoordinateRegion(center: station.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
         }
     }
-    /*
-    private var priceColor: Color {
-        switch station.priceLevel {
-        case .cheap:     return Color("PriceCheap")
-        case .mid:       return Color("PriceMid")
-        case .expensive: return Color("PriceExpensive")
-        }
-    }
-     */
 }
 
 // MARK: - Ranking Row

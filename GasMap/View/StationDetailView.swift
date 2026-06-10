@@ -2,6 +2,7 @@ import SwiftUI
 import MapKit
 
 struct StationDetailView: View {
+    @EnvironmentObject var viewModel: GasMapViewModel
     let station: GasStation
     @Environment(\.dismiss) var dismiss
 
@@ -18,6 +19,14 @@ struct StationDetailView: View {
             .navigationTitle(station.name)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        viewModel.toggleFavorite(station)
+                    } label: {
+                        Image(systemName: viewModel.isFavorite(station) ? "heart.fill" : "heart")
+                            .foregroundColor(viewModel.isFavorite(station) ? .red : .primary)
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("닫기") { dismiss() }
                 }
