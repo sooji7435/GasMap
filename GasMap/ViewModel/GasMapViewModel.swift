@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Combine
 import CoreLocation
 import MapKit
 import WidgetKit
@@ -112,6 +113,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
                 guard !Task.isCancelled else { return }
                 self.stations = result
                 self.saveWidgetData()
+                self.saveFavoritesWidgetData()
             } catch {
                 guard !Task.isCancelled else { return }
                 self.errorMessage = error.localizedDescription
@@ -312,6 +314,20 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         if let encoded = try? JSONEncoder().encode(favoriteStations) {
             UserDefaults.standard.set(encoded, forKey: "favoriteStations")
         }
+        saveFavoritesWidgetData()
+    }
+
+    private func saveFavoritesWidgetData() {
+        let data = favoriteStations.map {
+            let s = currentData(for: $0)
+            return WidgetStationData(name: s.name, price: s.price, brand: s.brand, distance: s.formattedDistance)
+        }
+        if let defaults = UserDefaults(suiteName: "group.me.younsu.park.GasMap"),
+           let encoded = try? JSONEncoder().encode(data) {
+            defaults.set(encoded, forKey: "widgetFavorites")
+            defaults.set(Date(), forKey: "widgetFavoritesUpdatedAt")
+        }
+        WidgetCenter.shared.reloadTimelines(ofKind: "GasMapFavoritesWidget")
     }
 
     // MARK: - Fuel Records
