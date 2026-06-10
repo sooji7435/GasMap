@@ -15,6 +15,10 @@ struct BottomSheetView: View {
             headerSection
             tabSelector
 
+            BannerAdView()
+                .frame(height: 60)
+                .padding(.horizontal, 16)
+
             if viewModel.isLoading && viewModel.activeTab != .favorites && viewModel.activeTab != .fuelLog {
                 loadingView
             } else {
