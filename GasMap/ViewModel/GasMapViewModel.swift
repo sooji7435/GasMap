@@ -17,6 +17,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     @Published var favoriteStations: [GasStation] = []
     @Published var selectedBrands: Set<String> = []
     @Published var sortOrder: SortOrder = .price
+    @Published var manualRadius: Int? = nil
 
     enum SortOrder { case price, distance }
 
@@ -126,8 +127,17 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         loadStations(coordinate: coordinate)
     }
     
+    func setManualRadius(_ km: Int?) {
+        manualRadius = km
+        if let center = lastFetchCenter {
+            lastFetchCenter = nil  // 강제 재로드
+            let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+            updateStations(in: region)
+        }
+    }
+
     func updateStations(in region: MKCoordinateRegion) {
-        let radius = calculateRadius(from: region.span.latitudeDelta)
+        let radius = manualRadius ?? calculateRadius(from: region.span.latitudeDelta)
 
         // 이전 fetch 위치에서 반경의 30% 미만 이동 + 반경 동일 → API 호출 스킵
         if let last = lastFetchCenter {

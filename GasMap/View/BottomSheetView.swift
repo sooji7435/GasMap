@@ -79,7 +79,7 @@ struct BottomSheetView: View {
         .sheet(isPresented: $showFilterSheet) {
             FilterSettingsView()
                 .environmentObject(viewModel)
-                .presentationDetents([.height(420)])
+                .presentationDetents([.height(580)])
         }
     }
     

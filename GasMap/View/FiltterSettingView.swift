@@ -70,6 +70,34 @@ struct FilterSettingsView: View {
                 }
                 .padding()
 
+                Divider()
+
+                // 검색 반경
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("검색 반경")
+                        .font(.headline)
+                    Text(viewModel.manualRadius == nil ? "지도 줌 레벨에 따라 자동 조정" : "\(viewModel.manualRadius!)km 고정")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    HStack(spacing: 8) {
+                        ForEach([nil, 2, 5, 10, 20], id: \.self) { km in
+                            Button {
+                                viewModel.setManualRadius(km)
+                            } label: {
+                                Text(km == nil ? "자동" : "\(km!)km")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundColor(viewModel.manualRadius == km ? .white : .orange)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 7)
+                                    .background(viewModel.manualRadius == km ? Color.orange : Color.orange.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                        }
+                    }
+                }
+                .padding()
+
                 Spacer()
 
                 Button("완료") { dismiss() }
