@@ -4,7 +4,6 @@ import MapKit
 // MARK: - Station Row
 struct StationRowView: View {
     @EnvironmentObject var viewModel: GasMapViewModel
-    @Binding var cameraPosition: MapCameraPosition
 
     let station: GasStation
     let isSelected: Bool
@@ -45,9 +44,6 @@ struct StationRowView: View {
         .padding(.vertical, 10)
         .background(isSelected ? Color.orange.opacity(0.06) : Color.clear)
         .animation(.easeInOut(duration: 0.15), value: isSelected)
-        .onTapGesture {
-            cameraPosition = .region(MKCoordinateRegion(center: station.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
-        }
     }
 }
 
@@ -58,7 +54,6 @@ struct RankingRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // Rank badge
             ZStack {
                 Circle()
                     .fill(rankColor)
@@ -68,7 +63,6 @@ struct RankingRowView: View {
                     .foregroundColor(rank <= 3 ? .white : .secondary)
             }
 
-            // Info
             VStack(alignment: .leading, spacing: 2) {
                 Text(station.name)
                     .font(.system(size: 14, weight: .medium))

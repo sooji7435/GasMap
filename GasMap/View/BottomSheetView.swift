@@ -5,29 +5,30 @@ struct BottomSheetView: View {
     @EnvironmentObject var viewModel: GasMapViewModel
     @EnvironmentObject var locationManager: LocationManager
     
-    @State private var sheetHeight: CGFloat = 280
     @State private var showFilterSheet = false
-    
+    @State private var selectedDetailStation: GasStation?
+
     @Binding var cameraPosition: MapCameraPosition
-    
+
     var body: some View {
         VStack(spacing: 5) {
-            // Header: 연료 탭 + 통계
             headerSection
-            
-            // Tab selector
             tabSelector
-            
-            // Content
-            if viewModel.isLoading && viewModel.activeTab != .favorites {
+
+            if viewModel.isLoading && viewModel.activeTab != .favorites && viewModel.activeTab != .fuelLog {
                 loadingView
             } else {
                 switch viewModel.activeTab {
                 case .map:       stationListView
                 case .ranking:   rankingView
                 case .favorites: favoritesView
+                case .fuelLog:   FuelLogView().environmentObject(viewModel)
                 }
             }
+        }
+        .sheet(item: $selectedDetailStation) { station in
+            StationDetailView(station: station)
+                .environmentObject(viewModel)
         }
     }
     
@@ -94,6 +95,9 @@ struct BottomSheetView: View {
             TabButton(title: "즐겨찾기", isActive: viewModel.activeTab == .favorites, badge: viewModel.favoriteStations.isEmpty ? nil : "\(viewModel.favoriteStations.count)") {
                 viewModel.activeTab = .favorites
             }
+            TabButton(title: "주유 기록", isActive: viewModel.activeTab == .fuelLog, badge: viewModel.fuelRecords.isEmpty ? nil : "\(viewModel.fuelRecords.count)") {
+                viewModel.activeTab = .fuelLog
+            }
         }
         .padding(.horizontal, 16)
         .overlay(
@@ -133,14 +137,13 @@ struct BottomSheetView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 0) {
                     ForEach(viewModel.sortedStations) { station in
-                        StationRowView(
-                            cameraPosition: $cameraPosition,
-                            station: station,
-                            isSelected: viewModel.selectedStation?.id == station.id
-                        )
-                        .onTapGesture {
-                            viewModel.selectStation(station)
-                        }
+                        StationRowView(station: station, isSelected: viewModel.selectedStation?.id == station.id)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                cameraPosition = .region(MKCoordinateRegion(center: station.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
+                                viewModel.selectStation(station)
+                                selectedDetailStation = station
+                            }
                         Divider().padding(.leading, 62)
                     }
                 }
@@ -164,6 +167,12 @@ struct BottomSheetView: View {
                 
                 ForEach(Array(viewModel.sortedStations.prefix(10).enumerated()), id: \.element.id) { index, station in
                     RankingRowView(station: station, rank: index + 1)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            cameraPosition = .region(MKCoordinateRegion(center: station.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
+                            viewModel.selectStation(station)
+                            selectedDetailStation = station
+                        }
                     Divider().padding(.leading, 56)
                 }
             }
@@ -193,14 +202,13 @@ struct BottomSheetView: View {
                     LazyVStack(alignment: .leading, spacing: 0) {
                         ForEach(viewModel.favoriteStations) { favorite in
                             let station = viewModel.currentData(for: favorite)
-                            StationRowView(
-                                cameraPosition: $cameraPosition,
-                                station: station,
-                                isSelected: viewModel.selectedStation?.id == station.id
-                            )
-                            .onTapGesture {
-                                viewModel.selectStation(station)
-                            }
+                            StationRowView(station: station, isSelected: viewModel.selectedStation?.id == station.id)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    cameraPosition = .region(MKCoordinateRegion(center: station.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)))
+                                    viewModel.selectStation(station)
+                                    selectedDetailStation = station
+                                }
                             Divider().padding(.leading, 62)
                         }
                     }

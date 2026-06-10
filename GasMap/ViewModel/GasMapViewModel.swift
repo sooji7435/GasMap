@@ -22,7 +22,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     @AppStorage("priceOffset") private var priceOffset: Int = 30
 
-    enum Tab { case map, ranking, favorites }
+    enum Tab { case map, ranking, favorites, fuelLog }
     
     private enum RadiusConfig {
         static let multiplier: Double = 100
