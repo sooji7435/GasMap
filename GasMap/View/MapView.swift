@@ -5,8 +5,16 @@ struct MapView: View {
     @EnvironmentObject var viewModel: GasMapViewModel
     @EnvironmentObject var locationManager: LocationManager
     
-    // 카메라 위치 관리 (유저 위치 자동 추적)
-    @State private var cameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    @State private var cameraPosition: MapCameraPosition = {
+        let lat = UserDefaults.standard.double(forKey: "lastLat")
+        let lon = UserDefaults.standard.double(forKey: "lastLon")
+        guard lat != 0, lon != 0 else { return .userLocation(fallback: .automatic) }
+        let span = MKCoordinateSpan(
+            latitudeDelta:  UserDefaults.standard.double(forKey: "lastSpanLat"),
+            longitudeDelta: UserDefaults.standard.double(forKey: "lastSpanLon")
+        )
+        return .region(MKCoordinateRegion(center: .init(latitude: lat, longitude: lon), span: span))
+    }()
     @State private var currentSpan: Double = 0.02
     @State private var showSheet: Bool = true
     @State private var searchText = ""

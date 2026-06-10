@@ -142,7 +142,28 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         lastFetchCenter = region.center
         lastFetchRadius = radius
         searchRadius = radius
+        saveLastRegion(region)
         loadStations(coordinate: region.center, radius: radius)
+    }
+
+    func saveLastRegion(_ region: MKCoordinateRegion) {
+        UserDefaults.standard.set(region.center.latitude,  forKey: "lastLat")
+        UserDefaults.standard.set(region.center.longitude, forKey: "lastLon")
+        UserDefaults.standard.set(region.span.latitudeDelta,  forKey: "lastSpanLat")
+        UserDefaults.standard.set(region.span.longitudeDelta, forKey: "lastSpanLon")
+    }
+
+    func loadLastRegion() -> MKCoordinateRegion? {
+        let lat = UserDefaults.standard.double(forKey: "lastLat")
+        let lon = UserDefaults.standard.double(forKey: "lastLon")
+        guard lat != 0, lon != 0 else { return nil }
+        return MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+            span: MKCoordinateSpan(
+                latitudeDelta:  UserDefaults.standard.double(forKey: "lastSpanLat"),
+                longitudeDelta: UserDefaults.standard.double(forKey: "lastSpanLon")
+            )
+        )
     }
     
     func calculateScale(span: Double) -> CGFloat {
