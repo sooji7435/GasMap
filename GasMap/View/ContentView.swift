@@ -23,7 +23,7 @@ struct ContentView: View {
             }
             Button("취소", role: .cancel) {}
         } message: {
-            Text("씨유는 주변 주유소를 찾기 위해 위치 접근 권한이 필요합니다.\n설정 > 개인 정보 보호 > 위치 서비스에서 권한을 허용해 주세요.")
+            Text("싸유는 주변 주유소를 찾기 위해 위치 접근 권한이 필요합니다.\n설정 > 개인 정보 보호 > 위치 서비스에서 권한을 허용해 주세요.")
         }
         .alert("오류가 발생했습니다", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
