@@ -6,12 +6,22 @@
 //
 
 import SwiftUI
+import AppTrackingTransparency
 
 @main
 struct OilMapApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear {
+                    requestTrackingPermission()
+                }
+        }
+    }
+
+    private func requestTrackingPermission() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            ATTrackingManager.requestTrackingAuthorization { _ in }
         }
     }
 }
