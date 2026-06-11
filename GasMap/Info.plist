@@ -5,7 +5,7 @@
 	<key>APIKey</key>
 	<string>$(APIKey)</string>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-5540110923255806~2191782164</string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIImageName</key>
