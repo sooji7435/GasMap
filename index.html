@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GasMap — 내 주변 저렴한 주유소 찾기</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      color: #1d1d1f;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      max-width: 680px;
+      padding: 60px 24px 40px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header p {
+      margin-top: 12px;
+      font-size: 1.1rem;
+      color: #6e6e73;
+    }
+
+    .features {
+      width: 100%;
+      max-width: 680px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      .features { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .card .icon {
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #6e6e73;
+      line-height: 1.5;
+    }
+
+    .cta {
+      margin: 48px 24px;
+    }
+
+    .cta a {
+      display: inline-block;
+      background: #0071e3;
+      color: #fff;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 14px 32px;
+      border-radius: 980px;
+      transition: background 0.2s;
+    }
+
+    .cta a:hover { background: #0077ed; }
+
+    footer {
+      width: 100%;
+      max-width: 680px;
+      padding: 24px;
+      margin-top: auto;
+      border-top: 1px solid #d2d2d7;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #6e6e73;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer a {
+      color: #6e6e73;
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>GasMap</h1>
+    <p>내 주변에서 가장 저렴한 주유소를 한눈에</p>
+  </header>
+
+  <section class="features">
+    <div class="card">
+      <div class="icon">📍</div>
+      <h3>실시간 위치 기반</h3>
+      <p>현재 위치 주변 주유소를 지도에서 바로 확인</p>
+    </div>
+    <div class="card">
+      <div class="icon">💰</div>
+      <h3>가격 비교</h3>
+      <p>휘발유·경유 가격을 색상으로 직관적으로 비교</p>
+    </div>
+    <div class="card">
+      <div class="icon">🗺️</div>
+      <h3>전국 주유소</h3>
+      <p>SK에너지, GS칼텍스, 현대오일뱅크, S-OIL 등 전국 지원</p>
+    </div>
+    <div class="card">
+      <div class="icon">⚡</div>
+      <h3>빠른 검색</h3>
+      <p>지도를 움직이면 해당 지역 주유소를 자동으로 불러오기</p>
+    </div>
+  </section>
+
+  <div class="cta">
+    <a href="https://apps.apple.com/app/id6744866992" target="_blank">App Store에서 무료 다운로드</a>
+  </div>
+
+  <footer>
+    <span>© 2026 GasMap</span>
+    <span>
+      <a href="privacy-policy.md">개인정보 처리방침</a>
+      &nbsp;·&nbsp;
+      <a href="https://github.com/sooji7435/GasMap">GitHub</a>
+    </span>
+  </footer>
+
+</body>
+</html>
