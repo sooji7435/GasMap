@@ -1,1 +1,6 @@
 Secrets.xcconfig
+
+# Xcode user data
+*.xcuserstate
+xcschememanagement.plist
+xcuserdata/
