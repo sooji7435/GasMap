@@ -10,7 +10,7 @@ import AppTrackingTransparency
 import GoogleMobileAds
 
 @main
-struct OilMapApp: App {
+struct GasMapApp: App {
     init() {
         MobileAds.shared.start(completionHandler: nil)
         #if DEBUG
