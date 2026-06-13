@@ -7,9 +7,14 @@
 
 import SwiftUI
 import AppTrackingTransparency
+import GoogleMobileAds
 
 @main
 struct OilMapApp: App {
+    init() {
+        MobileAds.shared.start(completionHandler: nil)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
