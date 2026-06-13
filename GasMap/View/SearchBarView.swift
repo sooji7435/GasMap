@@ -51,13 +51,7 @@ struct SearchBarView: View {
                     }
 
                 if !searchText.isEmpty {
-                    Button {
-                        searchText = ""
-                        viewModel.searchCompletions = []
-                        viewModel.stationSearchResults = []
-                        isEditing = false
-                        isFocused = false
-                    } label: {
+                    Button { clearSearch() } label: {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.secondary)
                     }
@@ -85,6 +79,14 @@ struct SearchBarView: View {
         .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 2)
     }
 
+    private func clearSearch(keepText: Bool = false) {
+        if !keepText { searchText = "" }
+        viewModel.searchCompletions = []
+        viewModel.stationSearchResults = []
+        isEditing = false
+        isFocused = false
+    }
+
     // MARK: - 검색 기록
 
     private var historySection: some View {
@@ -109,7 +111,7 @@ struct SearchBarView: View {
                         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
                     ))
                     searchText = record.name
-                    isFocused = false
+                    clearSearch(keepText: true)
                 } label: {
                     HStack(spacing: 10) {
                         Image(systemName: "clock")
@@ -179,10 +181,7 @@ struct SearchBarView: View {
                             if let region { cameraPosition = .region(region) }
                         }
                         searchText = station.name
-                        viewModel.stationSearchResults = []
-                        viewModel.searchCompletions = []
-                        isEditing = false
-                        isFocused = false
+                        clearSearch(keepText: true)
                     } label: {
                         HStack(spacing: 10) {
                             Image(systemName: "fuelpump.fill")
@@ -232,10 +231,7 @@ struct SearchBarView: View {
                             if let region { cameraPosition = .region(region) }
                         }
                         searchText = completion.title
-                        viewModel.searchCompletions = []
-                        viewModel.stationSearchResults = []
-                        isEditing = false
-                        isFocused = false
+                        clearSearch(keepText: true)
                     } label: {
                         HStack(spacing: 10) {
                             Image(systemName: "mappin.circle.fill")

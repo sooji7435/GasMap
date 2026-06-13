@@ -35,6 +35,25 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         static let maximum: Int = 50
     }
 
+    private enum StorageKey {
+        static let selectedFuelType = StorageKey.selectedFuelType
+        static let selectedBrands = StorageKey.selectedBrands
+        static let favoriteStations = StorageKey.favoriteStations
+        static let fuelRecords = StorageKey.fuelRecords
+        static let searchHistory = StorageKey.searchHistory
+        static let lastLat = "lastLat"
+        static let lastLon = "lastLon"
+        static let lastSpanLat = "lastSpanLat"
+        static let lastSpanLon = "lastSpanLon"
+    }
+
+    private static let priceFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.maximumFractionDigits = 0
+        return f
+    }()
+
     private let apiService = OpinetService()
     private let completer = MKLocalSearchCompleter()
     private var fetchTask: Task<Void, Never>?
@@ -42,7 +61,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     private var lastFetchRadius: Int = 0
     
     override init() {
-        let savedRaw = UserDefaults.standard.string(forKey: "selectedFuelType") ?? FuelType.gasoline.rawValue
+        let savedRaw = UserDefaults.standard.string(forKey: StorageKey.selectedFuelType) ?? FuelType.gasoline.rawValue
         self.selectedFuelType = FuelType(rawValue: savedRaw) ?? .gasoline
         super.init()
         completer.delegate = self
@@ -88,10 +107,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     var averagePrice: String {
         guard averagePriceValue > 0 else { return "-" }
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 0
-        return (formatter.string(from: NSNumber(value: averagePriceValue)) ?? "\(Int(averagePriceValue))") + "원"
+        return (Self.priceFormatter.string(from: NSNumber(value: averagePriceValue)) ?? "\(Int(averagePriceValue))") + "원"
     }
 
     // MARK: - Load Stations
@@ -133,7 +149,7 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     func changeFuelType(_ type: FuelType, coordinate: CLLocationCoordinate2D) {
         HapticManager.selection()
         selectedFuelType = type
-        UserDefaults.standard.set(type.rawValue, forKey: "selectedFuelType")
+        UserDefaults.standard.set(type.rawValue, forKey: StorageKey.selectedFuelType)
         loadStations(coordinate: coordinate)
     }
     
@@ -167,21 +183,21 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 
     func saveLastRegion(_ region: MKCoordinateRegion) {
-        UserDefaults.standard.set(region.center.latitude,  forKey: "lastLat")
-        UserDefaults.standard.set(region.center.longitude, forKey: "lastLon")
-        UserDefaults.standard.set(region.span.latitudeDelta,  forKey: "lastSpanLat")
-        UserDefaults.standard.set(region.span.longitudeDelta, forKey: "lastSpanLon")
+        UserDefaults.standard.set(region.center.latitude,  forKey: StorageKey.lastLat)
+        UserDefaults.standard.set(region.center.longitude, forKey: StorageKey.lastLon)
+        UserDefaults.standard.set(region.span.latitudeDelta,  forKey: StorageKey.lastSpanLat)
+        UserDefaults.standard.set(region.span.longitudeDelta, forKey: StorageKey.lastSpanLon)
     }
 
     func loadLastRegion() -> MKCoordinateRegion? {
-        let lat = UserDefaults.standard.double(forKey: "lastLat")
-        let lon = UserDefaults.standard.double(forKey: "lastLon")
+        let lat = UserDefaults.standard.double(forKey: StorageKey.lastLat)
+        let lon = UserDefaults.standard.double(forKey: StorageKey.lastLon)
         guard lat != 0, lon != 0 else { return nil }
         return MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
             span: MKCoordinateSpan(
-                latitudeDelta:  UserDefaults.standard.double(forKey: "lastSpanLat"),
-                longitudeDelta: UserDefaults.standard.double(forKey: "lastSpanLon")
+                latitudeDelta:  UserDefaults.standard.double(forKey: StorageKey.lastSpanLat),
+                longitudeDelta: UserDefaults.standard.double(forKey: StorageKey.lastSpanLon)
             )
         )
     }
@@ -268,18 +284,18 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
 
     func clearSearchHistory() {
         searchHistory = []
-        UserDefaults.standard.removeObject(forKey: "searchHistory")
+        UserDefaults.standard.removeObject(forKey: StorageKey.searchHistory)
     }
 
     private func loadSearchHistory() {
-        guard let data = UserDefaults.standard.data(forKey: "searchHistory"),
+        guard let data = UserDefaults.standard.data(forKey: StorageKey.searchHistory),
               let decoded = try? JSONDecoder().decode([SearchRecord].self, from: data) else { return }
         searchHistory = decoded
     }
 
     private func saveSearchHistory() {
         if let encoded = try? JSONEncoder().encode(searchHistory) {
-            UserDefaults.standard.set(encoded, forKey: "searchHistory")
+            UserDefaults.standard.set(encoded, forKey: StorageKey.searchHistory)
         }
     }
 
@@ -310,16 +326,16 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
         } else {
             selectedBrands.insert(code)
         }
-        UserDefaults.standard.set(Array(selectedBrands), forKey: "selectedBrands")
+        UserDefaults.standard.set(Array(selectedBrands), forKey: StorageKey.selectedBrands)
     }
 
     func clearBrandFilter() {
         selectedBrands = []
-        UserDefaults.standard.removeObject(forKey: "selectedBrands")
+        UserDefaults.standard.removeObject(forKey: StorageKey.selectedBrands)
     }
 
     private func loadSelectedBrands() {
-        let saved = UserDefaults.standard.stringArray(forKey: "selectedBrands") ?? []
+        let saved = UserDefaults.standard.stringArray(forKey: StorageKey.selectedBrands) ?? []
         selectedBrands = Set(saved)
     }
 
@@ -344,14 +360,14 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 
     private func loadFavorites() {
-        guard let data = UserDefaults.standard.data(forKey: "favoriteStations"),
+        guard let data = UserDefaults.standard.data(forKey: StorageKey.favoriteStations),
               let decoded = try? JSONDecoder().decode([GasStation].self, from: data) else { return }
         favoriteStations = decoded
     }
 
     private func saveFavorites() {
         if let encoded = try? JSONEncoder().encode(favoriteStations) {
-            UserDefaults.standard.set(encoded, forKey: "favoriteStations")
+            UserDefaults.standard.set(encoded, forKey: StorageKey.favoriteStations)
         }
         saveFavoritesWidgetData()
     }
@@ -390,14 +406,14 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 
     private func loadFuelRecords() {
-        guard let data = UserDefaults.standard.data(forKey: "fuelRecords"),
+        guard let data = UserDefaults.standard.data(forKey: StorageKey.fuelRecords),
               let decoded = try? JSONDecoder().decode([FuelRecord].self, from: data) else { return }
         fuelRecords = decoded
     }
 
     private func saveFuelRecords() {
         if let encoded = try? JSONEncoder().encode(fuelRecords) {
-            UserDefaults.standard.set(encoded, forKey: "fuelRecords")
+            UserDefaults.standard.set(encoded, forKey: StorageKey.fuelRecords)
         }
     }
 

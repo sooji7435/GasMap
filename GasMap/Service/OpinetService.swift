@@ -20,79 +20,46 @@ class OpinetService {
         radius: Int = 5,
         count: Int = 20
     ) async throws -> [GasStation] {
-        
         let katec = CoordinateConverter.convertWGS84ToKATEC(lat: coordinate.latitude, lon: coordinate.longitude)
-        // 오피넷은 x=경도, y=위도 (katec 좌표계 사용)
-        let urlString = "\(baseURL)/aroundAll.do" +
-                "?code=\(apiKey)" +
-                "&x=\(String(format: "%.1f", katec.x))" + // 변환된 X
-                "&y=\(String(format: "%.1f", katec.y))" + // 변환된 Y
-                "&radius=\(radius * 1000)" +
-                "&prodcd=\(fuelType.rawValue)" +
-                "&sort=1" +
-                "&cnt=\(count)" +
-                "&out=json"
-        
-        guard let url = URL(string: urlString) else {
-            throw APIError.invalidURL
-        }
-
-        let (data, response) = try await URLSession.shared.data(from: url)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            throw APIError.serverError
-        }
-
-        let decoded = try JSONDecoder().decode(OpinetResponse.self, from: data)
-        
+        let url = try buildURL(path: "aroundAll.do", queryItems: [
+            URLQueryItem(name: "code",   value: apiKey),
+            URLQueryItem(name: "x",      value: String(format: "%.1f", katec.x)),
+            URLQueryItem(name: "y",      value: String(format: "%.1f", katec.y)),
+            URLQueryItem(name: "radius", value: "\(radius * 1000)"),
+            URLQueryItem(name: "prodcd", value: fuelType.rawValue),
+            URLQueryItem(name: "sort",   value: "1"),
+            URLQueryItem(name: "cnt",    value: "\(count)"),
+            URLQueryItem(name: "out",    value: "json"),
+        ])
+        let decoded = try await fetch(OpinetResponse.self, from: url)
         return decoded.result.stations
     }
 
-    // MARK: - 시도별 최저가 주유소 조회
-    func fetchCheapestStations(
-        sido: String = "01",
-        fuelType: FuelType,
-        count: Int = 10
-    ) async throws -> [GasStation] {
-        let urlString = "\(baseURL)/lowTop.do" +
-            "?code=\(apiKey)" +
-            "&sido=\(sido)" +
-            "&prodcd=\(fuelType.rawValue)" +
-            "&cnt=\(count)" +
-            "&out=json"
-
-        guard let url = URL(string: urlString) else {
-            throw APIError.invalidURL
-        }
-
-        let (data, response) = try await URLSession.shared.data(from: url)
-
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else {
-            throw APIError.serverError
-        }
-
-        let decoded = try JSONDecoder().decode(OpinetResponse.self, from: data)
-        return decoded.result.stations
-    }
-    
     // MARK: - 주유소명 검색
     func searchStationsByName(name: String) async throws -> [StationSearchResult] {
-        let encodedName = name.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? name
-        let urlString = "\(baseURL)/searchByName.do" +
-            "?code=\(apiKey)" +
-            "&out=json" +
-            "&osnm=\(encodedName)"
-        
-        guard let url = URL(string: urlString) else { throw APIError.invalidURL }
-        
-        let (data, response) = try await URLSession.shared.data(from: url)
-        guard let httpResponse = response as? HTTPURLResponse,
-              httpResponse.statusCode == 200 else { throw APIError.serverError }
-        
-        let decoded = try JSONDecoder().decode(StationSearchResponse.self, from: data)
+        let url = try buildURL(path: "searchByName.do", queryItems: [
+            URLQueryItem(name: "code", value: apiKey),
+            URLQueryItem(name: "out",  value: "json"),
+            URLQueryItem(name: "osnm", value: name),
+        ])
+        let decoded = try await fetch(StationSearchResponse.self, from: url)
         return decoded.result.stations
+    }
+
+    // MARK: - Helpers
+    private func buildURL(path: String, queryItems: [URLQueryItem]) throws -> URL {
+        var components = URLComponents(string: "\(baseURL)/\(path)")!
+        components.queryItems = queryItems
+        guard let url = components.url else { throw APIError.invalidURL }
+        return url
+    }
+
+    private func fetch<T: Decodable>(_ type: T.Type, from url: URL) async throws -> T {
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            throw APIError.serverError
+        }
+        return try JSONDecoder().decode(T.self, from: data)
     }
 }
 
