@@ -36,11 +36,11 @@ class GasMapViewModel: NSObject, ObservableObject, MKLocalSearchCompleterDelegat
     }
 
     private enum StorageKey {
-        static let selectedFuelType = StorageKey.selectedFuelType
-        static let selectedBrands = StorageKey.selectedBrands
-        static let favoriteStations = StorageKey.favoriteStations
-        static let fuelRecords = StorageKey.fuelRecords
-        static let searchHistory = StorageKey.searchHistory
+        static let selectedFuelType = "selectedFuelType"
+        static let selectedBrands = "selectedBrands"
+        static let favoriteStations = "favoriteStations"
+        static let fuelRecords = "fuelRecords"
+        static let searchHistory = "searchHistory"
         static let lastLat = "lastLat"
         static let lastLon = "lastLon"
         static let lastSpanLat = "lastSpanLat"
