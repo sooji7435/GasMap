@@ -13,9 +13,6 @@ import GoogleMobileAds
 struct GasMapApp: App {
     init() {
         MobileAds.shared.start(completionHandler: nil)
-        #if DEBUG
-        MobileAds.shared.requestConfiguration.testDeviceIdentifiers = ["SIMULATOR"]
-        #endif
     }
 
     var body: some Scene {
