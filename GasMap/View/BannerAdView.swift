@@ -3,7 +3,11 @@ import SwiftUI
 import UIKit
 
 struct BannerAdView: UIViewRepresentable {
+    #if DEBUG
+    private let adUnitID = "ca-app-pub-3940256099942544/2934735716"
+    #else
     private let adUnitID = "ca-app-pub-5540110923255806/1834357811"
+    #endif
 
     func makeUIView(context: Context) -> BannerView {
         let adSize = largeAnchoredAdaptiveBanner(
