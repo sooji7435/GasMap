@@ -60,11 +60,18 @@ struct GasStation: Identifiable, Codable {
     }
     
     
-    var formattedPrice: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return (formatter.string(from: NSNumber(value: price)) ?? "\(price)") + "원"
+    private static let priceFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.maximumFractionDigits = 0
+        return f
+    }()
+
+    var formattedPriceNumber: String {
+        Self.priceFormatter.string(from: NSNumber(value: price)) ?? "\(price)"
     }
+
+    var formattedPrice: String { formattedPriceNumber + "원" }
     
     var formattedDistance: String {
         if distance < 1000 {

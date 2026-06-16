@@ -152,10 +152,14 @@ struct FuelLogView: View {
         }
     }
 
-    private func formatCost(_ cost: Int) -> String {
+    private static let costFormatter: NumberFormatter = {
         let f = NumberFormatter()
         f.numberStyle = .decimal
-        return (f.string(from: NSNumber(value: cost)) ?? "\(cost)") + "원"
+        return f
+    }()
+
+    private func formatCost(_ cost: Int) -> String {
+        (Self.costFormatter.string(from: NSNumber(value: cost)) ?? "\(cost)") + "원"
     }
 }
 

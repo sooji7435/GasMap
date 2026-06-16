@@ -6,12 +6,12 @@ struct MapView: View {
     @EnvironmentObject var locationManager: LocationManager
 
     @State private var cameraPosition: MapCameraPosition = {
-        let lat = UserDefaults.standard.double(forKey: "lastLat")
-        let lon = UserDefaults.standard.double(forKey: "lastLon")
+        let lat = UserDefaults.standard.double(forKey: GasMapViewModel.StorageKey.lastLat)
+        let lon = UserDefaults.standard.double(forKey: GasMapViewModel.StorageKey.lastLon)
         guard lat != 0, lon != 0 else { return .userLocation(fallback: .automatic) }
         let span = MKCoordinateSpan(
-            latitudeDelta:  UserDefaults.standard.double(forKey: "lastSpanLat"),
-            longitudeDelta: UserDefaults.standard.double(forKey: "lastSpanLon")
+            latitudeDelta:  UserDefaults.standard.double(forKey: GasMapViewModel.StorageKey.lastSpanLat),
+            longitudeDelta: UserDefaults.standard.double(forKey: GasMapViewModel.StorageKey.lastSpanLon)
         )
         return .region(MKCoordinateRegion(center: .init(latitude: lat, longitude: lon), span: span))
     }()
@@ -23,7 +23,7 @@ struct MapView: View {
     @State private var baseSheetHeight: CGFloat = 180
 
     private var snapHeights: [CGFloat] {
-        let h = UIScreen.main.bounds.height
+        let h = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.screen.bounds.height ?? 844
         return [180, h * 0.5, h * 0.72]
     }
 
@@ -31,7 +31,7 @@ struct MapView: View {
 
     var body: some View {
         // 배너를 ZStack 완전히 밖으로 분리 — VStack 구조로 고정
-        VStack() {
+        VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 // MARK: 지도
                 Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {

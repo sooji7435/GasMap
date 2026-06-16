@@ -23,7 +23,7 @@ struct StationRowView: View {
             Spacer()
 
             VStack(alignment: .trailing, spacing: 2) {
-                Text("\(station.price)")
+                Text(station.formattedPriceNumber)
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.primary)
                 Text("원/L")

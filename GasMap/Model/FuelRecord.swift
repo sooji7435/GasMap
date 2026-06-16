@@ -10,17 +10,23 @@ struct FuelRecord: Identifiable, Codable {
 
     var totalCost: Int { Int(Double(pricePerLiter) * liters) }
 
-    var formattedDate: String {
+    private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateFormat = "yyyy.MM.dd"
-        return f.string(from: date)
-    }
+        return f
+    }()
+
+    private static let numberFormatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        return f
+    }()
+
+    var formattedDate: String { Self.dateFormatter.string(from: date) }
 
     var formattedLiters: String { String(format: "%.1fL", liters) }
 
     var formattedTotal: String {
-        let f = NumberFormatter()
-        f.numberStyle = .decimal
-        return (f.string(from: NSNumber(value: totalCost)) ?? "\(totalCost)") + "원"
+        (Self.numberFormatter.string(from: NSNumber(value: totalCost)) ?? "\(totalCost)") + "원"
     }
 }

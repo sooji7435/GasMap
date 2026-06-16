@@ -69,15 +69,11 @@ class OpinetService {
 enum APIError: LocalizedError {
     case invalidURL
     case serverError
-    case decodingError
-    case noAPIKey
 
     var errorDescription: String? {
         switch self {
-        case .invalidURL:     return "잘못된 URL입니다."
-        case .serverError:    return "서버 오류가 발생했습니다."
-        case .decodingError:  return "데이터 파싱 오류입니다."
-        case .noAPIKey:       return "API 키를 입력해주세요."
+        case .invalidURL:  return "잘못된 URL입니다."
+        case .serverError: return "서버 오류가 발생했습니다."
         }
     }
 }
