@@ -31,7 +31,7 @@ struct MapView: View {
 
     var body: some View {
         // 배너를 ZStack 완전히 밖으로 분리 — VStack 구조로 고정
-        VStack(spacing: 0) {
+        VStack() {
             ZStack(alignment: .bottom) {
                 // MARK: 지도
                 Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
@@ -131,10 +131,8 @@ struct MapView: View {
             }
 
             // MARK: 배너 — VStack 하단에 고정, 시트와 완전히 독립
-            BannerAdView()
-                .frame(height: 60)
-                .frame(maxWidth: .infinity)
-                .background(Color(.systemBackground))
+            BannerAd()
+
         }
         .sheet(item: $selectedDetailStation) { station in
             StationDetailView(station: station)
@@ -178,4 +176,10 @@ struct PriceAnnotationView: View {
         case .expensive: return Color("PriceExpensive")
         }
     }
+}
+
+#Preview {
+    MapView()
+        .environmentObject(GasMapViewModel())
+        .environmentObject(LocationManager())
 }
