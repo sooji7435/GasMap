@@ -3,23 +3,54 @@ import SwiftUI
 import UIKit
 
 struct BannerAdView: UIViewRepresentable {
-    private let adUnitID = "ca-app-pub-5540110923255806/9667683591"
+    private let adUnitID = "ca-app-pub-5540110923255806/6791380457"
+    @EnvironmentObject var adManager: AdManager
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
 
     func makeUIView(context: Context) -> BannerView {
         let bannerView = BannerView()
         bannerView.adUnitID = adUnitID
-
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let rootViewController = windowScene.windows.first?.rootViewController {
-            bannerView.rootViewController = rootViewController
-        }
-
         bannerView.adSize = AdSizeBanner
-        bannerView.load(Request())
+        bannerView.delegate = context.coordinator
+        bannerView.rootViewController = rootViewController()
+
+        if adManager.isReady {
+            context.coordinator.hasLoaded = true
+            bannerView.load(Request())
+        }
         return bannerView
     }
 
-    func updateUIView(_ uiView: BannerView, context: Context) {}
+    func updateUIView(_ uiView: BannerView, context: Context) {
+        guard adManager.isReady, !context.coordinator.hasLoaded else { return }
+        context.coordinator.hasLoaded = true
+        uiView.rootViewController = rootViewController()
+        uiView.load(Request())
+    }
+
+    private func rootViewController() -> UIViewController? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive }?
+            .windows
+            .first { $0.isKeyWindow }?
+            .rootViewController
+    }
+
+    class Coordinator: NSObject, BannerViewDelegate {
+        var hasLoaded = false
+
+        func bannerViewDidReceiveAd(_ bannerView: BannerView) {
+            print("[AdMob] 광고 로드 성공")
+        }
+
+        func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+            print("[AdMob] 광고 로드 실패: \(error.localizedDescription)")
+        }
+    }
 }
 
 struct BannerAd: View {
@@ -33,5 +64,3 @@ struct BannerAd: View {
 #Preview {
     BannerAdView()
 }
-
-
