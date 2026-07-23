@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AABB000CAABB000CAABB000C /* GasMapWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AABB0001AABB0001AABB0001 /* GasMapWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		F8BD61482FD9DEF100E50BB7 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = F8BD61472FD9DEF100E50BB7 /* GoogleMobileAds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,7 +114,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F8BD61482FD9DEF100E50BB7 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,7 +208,6 @@
 			);
 			name = GasMap;
 			packageProductDependencies = (
-				F8BD61472FD9DEF100E50BB7 /* GoogleMobileAds */,
 			);
 			productName = OilMap;
 			productReference = F83CF7D42F920A600043739A /* GasMap.app */;
@@ -298,7 +295,6 @@
 			mainGroup = F83CF7CB2F920A600043739A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				F8BD61452FD9DECF00E50BB7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F83CF7D52F920A600043739A /* Products */;
@@ -790,25 +786,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		F8BD61452FD9DECF00E50BB7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 13.5.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		F8BD61472FD9DEF100E50BB7 /* GoogleMobileAds */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F8BD61452FD9DECF00E50BB7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
-			productName = GoogleMobileAds;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F83CF7CC2F920A600043739A /* Project object */;
 }
