@@ -130,9 +130,6 @@ struct MapView: View {
                     )
             }
 
-            // MARK: 배너 — VStack 하단에 고정, 시트와 완전히 독립
-            BannerAd()
-
         }
         .sheet(item: $selectedDetailStation) { station in
             StationDetailView(station: station)
