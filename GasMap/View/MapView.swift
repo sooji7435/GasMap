@@ -30,9 +30,7 @@ struct MapView: View {
     @AppStorage("priceOffset") private var priceOffset: Int = 30
 
     var body: some View {
-        // 배너를 ZStack 완전히 밖으로 분리 — VStack 구조로 고정
-        VStack(spacing: 0) {
-            ZStack(alignment: .bottom) {
+        ZStack(alignment: .bottom) {
                 // MARK: 지도
                 Map(position: $cameraPosition, bounds: MapCameraBounds(maximumDistance: 50000)) {
                     ForEach(viewModel.filteredStations) { station in
@@ -128,8 +126,6 @@ struct MapView: View {
                                 baseSheetHeight = snap
                             }
                     )
-            }
-
         }
         .sheet(item: $selectedDetailStation) { station in
             StationDetailView(station: station)
